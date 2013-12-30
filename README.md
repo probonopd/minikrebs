@@ -6,6 +6,8 @@ Based on http://shackspace.de/wiki/doku.php?id=project:minikrebs
 Build image that contains a webradio client
 -------------------------------------------
 
+    # If you want to build for a device other than the TP-LINK TL-WR703N, do:
+    export PLATFORM=DIR505A1 # for D-Link DIR-505
     # Get ready
     ./prepare radio
     # Build the firmware image
@@ -18,7 +20,7 @@ The device will get an IP address via DHCP on wired Ethernet, and default passwo
 
 ### Setting up WLAN client mode
 
-* Wifi: Scan, Join Network, Create / Assign firewall-zone: select lan (green)!, Submit, Save and apply
+* Wifi: Scan, Join Network, Create / Assign firewall-zone: select lan (green)! (this is no longer needed since the firewall packet is no longer installed), Submit, Save and apply
 * Interfaces -> WWAN -> Advanced settings -> Override MAC address: Has the WRONG IP, so set IP+1, Save and apply
 * Interfaces: Both LAN and WWAN should be green now and both should have an IP address
 * HTML interface should be reachable on both addresses

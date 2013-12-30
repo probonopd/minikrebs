@@ -21,21 +21,16 @@ fi
 
 echo
 
-if [ -e bin/ar71xx/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-factory.bin ];
+FACTORY=$(find bin/ | grep -e "squashfs-factory.bin$" | head -n 1)
+SYSUPGRADE=$(find bin/ | grep -e "squashfs-sysupgrade.bin$" | head -n 1)
+
+if [ "$FACTORY" != "" ];
 then
     cat << EOF
 finished building 
 You can use the following images:
-    Factory       : $PWD/bin/ar71xx/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-factory.bin
-    System Upgrade: $PWD/bin/ar71xx/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin
-EOF
-elif [ -e bin/ar71xx/openwrt-ar71xx-generic-tl-mr3020-v1-squashfs-factory.bin ];
-then
-    cat << EOF
-finished building 
-You can use the following images:
-    Factory       : $PWD/bin/ar71xx/openwrt-ar71xx-generic-tl-mr3020-v1-squashfs-factory.bin
-    System Upgrade: $PWD/bin/ar71xx/openwrt-ar71xx-generic-tl-mr3020-v1-squashfs-sysupgrade.bin
+    Factory       : $PWD/$FACTORY
+    System Upgrade: $PWD/$SYSUPGRADE
 EOF
 else
     cat << EOF
