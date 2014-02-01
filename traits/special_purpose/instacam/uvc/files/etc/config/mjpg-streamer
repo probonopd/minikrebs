@@ -1,9 +1,9 @@
 config mjpg-streamer core
         option enabled          "1"
-				option input						"uvc"
+        option input            "uvc"
         option device           "/dev/video0"
         option resolution       "1280x720"
         option fps              "15"
-				option output						"http"
+        option output           "http"
         option www              "/www/webcam"
         option port             "80"
