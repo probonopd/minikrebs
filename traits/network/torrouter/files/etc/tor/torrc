@@ -1,6 +1,7 @@
 RunAsDaemon 1
 # TODO: switch to warn
 Log notice syslog
+# TODO: use persistent storage
 DataDirectory /var/lib/tor
 User tor
 PidFile /var/run/tor.pid
