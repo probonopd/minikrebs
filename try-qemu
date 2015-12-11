@@ -6,5 +6,6 @@ qemu-system-x86_64 -M q35 \
   -drive "file=$1,id=d0,if=none,bus=0,unit=0" \
   -device ide-hd,drive=d0,bus=ide.0 \
   -netdev user,id=mynet0 -device e1000,netdev=mynet0 \
-  -netdev user,id=mynet1,restrict=y -device e1000,netdev=mynet1
+  -netdev user,id=mynet1,restrict=y -device e1000,netdev=mynet1 \
+  -nographic
 
