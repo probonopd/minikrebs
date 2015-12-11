@@ -12,7 +12,7 @@ EOF
     HIDE_TRAITS="true" bin/available_profiles
 }
 
-[ x"${1:-}" = "x" ] && usage && exit 1
+[ -z "${1:-}"  ] && usage && exit 1
 
 HERE="$(dirname $(readlink -f $0))"
 PROFILE_DIR="${HERE}/profiles"
@@ -58,18 +58,21 @@ handle_trait_dir(){
 
 }
 
-build_custom_make(){ 
+build_custom_make(){
     #hack to avoid newlines in build file
     PLATFORM="$1"
 
     echo "make image PROFILE='$PLATFORM' PACKAGES='`cat $PKG_FILE`' FILES=customfiles/" > \
         "$BUILD_DIR/custom_make"
+    chmod +x $BUILD_DIR/custom_make
 }
 main (){
     rm -rf "$BUILD_DIR/customfiles"
     rm -f "$OVERLAY_PKG_FILE" "$PKG_FILE"
     mkdir -p "$BUILD_DIR/customfiles"
-    ALL_PACKAGES=`cat "$PROFILE" | while read trait;do
+    echo "Doc from the Profile:" >&2
+    grep '^\s*#' "$PROFILE" | indent >&2
+    ALL_PACKAGES=`grep -v '^\s*#' "$PROFILE" | while read trait;do
         echo "Handling $TRAIT_DIR/$trait" >&2
         handle_trait_dir "$(readlink -f $TRAIT_DIR/$trait)" ||:
     done`
