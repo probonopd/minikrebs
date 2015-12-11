@@ -1,0 +1,4 @@
+uci set network.wan=interface
+uci set network.wan.ifname=eth0
+uci set network.wan.proto=dhcp
+uci commit network

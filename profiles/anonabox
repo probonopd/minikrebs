@@ -1,0 +1,6 @@
+core
+core/firstrun
+minimal/no-ppp
+network/open-wifi-ap
+network/eth-dhcp
+network/tor
