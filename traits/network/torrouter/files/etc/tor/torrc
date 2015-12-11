@@ -1,0 +1,18 @@
+RunAsDaemon 1
+# TODO: switch to warn
+Log notice stderr
+DataDirectory /var/lib/tor
+User tor
+PidFile /var/run/tor.pid
+
+VirtualAddrNetwork 10.192.0.0/10
+AutomapHostsOnResolve 1
+TransPort 0.0.0.0:9040
+DNSPort 0.0.0.0:9056
+# TODO: SocksPort?
+
+# TODO: tuning of timeouts
+KeepalivePeriod 60
+CircuitBuildTimeout 20
+NewCircuitBuildPeriod 30
+AvoidDiskWrites 1
