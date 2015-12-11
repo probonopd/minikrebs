@@ -18,7 +18,7 @@ HERE="$(dirname $(readlink -f $0))"
 PROFILE_DIR="${HERE}/profiles"
 TRAIT_DIR="${TRAIT_DIR:-${HERE}/traits}"
 BUILD_DIR="${HERE}/builder/"
-PLATFORM="${PLATFORM:-TLWR703}"
+PLATFORM="${PLATFORM-TLWR703}"
 PROFILE="$PROFILE_DIR/$1"
 PKG_FILE="${BUILD_DIR}/root_packages"
 OVERLAY_PKG_FILE="${BUILD_DIR}/overlay_packages"
@@ -61,19 +61,19 @@ handle_trait_dir(){
 build_custom_make(){ 
     #hack to avoid newlines in build file
     PLATFORM="$1"
-    
+
     echo "make image PROFILE='$PLATFORM' PACKAGES='`cat $PKG_FILE`' FILES=customfiles/" > \
         "$BUILD_DIR/custom_make"
 }
 main (){
-    rm -rf "$BUILD_DIR/customfiles" 
-    rm -f $OVERLAY_PKG_FILE $PKG_FILE 
-    mkdir -p "$BUILD_DIR/customfiles" 
+    rm -rf "$BUILD_DIR/customfiles"
+    rm -f "$OVERLAY_PKG_FILE" "$PKG_FILE"
+    mkdir -p "$BUILD_DIR/customfiles"
     ALL_PACKAGES=`cat "$PROFILE" | while read trait;do
-        echo "Handling $TRAIT_DIR/$trait" >&2        
+        echo "Handling $TRAIT_DIR/$trait" >&2
         handle_trait_dir "$(readlink -f $TRAIT_DIR/$trait)" ||:
     done`
-    build_custom_make "$PLATFORM" 
+    build_custom_make "$PLATFORM"
 }
 
 main $@

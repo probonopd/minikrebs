@@ -7,7 +7,7 @@ if [ ! -e Makefile ] ;then
     exit 1
 fi
 
-echo 
+echo
 rm -r bin/ || echo "no bindir, skipping removal"
 if [ -e ./custom_make ];then
     echo "Starting Custom Make"
@@ -21,16 +21,14 @@ fi
 
 echo
 
-FACTORY=$(find bin/ | grep -e "squashfs-factory.bin$" | head -n 1)
-SYSUPGRADE=$(find bin/ | grep -e "squashfs-sysupgrade.bin$" | head -n 1)
+FILES=$(find $PWD/bin/ -type f | grep -v 'sums$' )
 
-if [ "$FACTORY" != "" ];
+if [ "$FILES" != "" ];
 then
     cat << EOF
-finished building 
+finished building
 You can use the following images:
-    Factory       : $PWD/$FACTORY
-    System Upgrade: $PWD/$SYSUPGRADE
+$FILES
 EOF
 else
     cat << EOF
