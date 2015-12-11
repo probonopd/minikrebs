@@ -1,4 +1,14 @@
-uci set network.wan=interface
-uci set network.wan.ifname=eth0
-uci set network.wan.proto=dhcp
+#!/bin/sh
+set -euf
+. /usr/lib/firstrun.sh
+itf=eth0
+
+clear_interface_config $itf
+# TODO: for now we keep the basic firewall config for wan
+uci batch <<EOF
+delete network.wan
+set network.wan=interface
+set network.wan.ifname=$itf
+set network.wan.proto=dhcp
+EOF
 uci commit network
