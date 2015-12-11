@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euf
-# New Trunk
-##IMAGEBUILDER_URL="http://downloads.openwrt.org/attitude_adjustment/12.09/ar71xx/generic/OpenWrt-ImageBuilder-ar71xx_generic-for-linux-i486.tar.bz2"
+# TODO: provide a means to switch builder. right now, simply move builder to builder-ar71xx and symlink to builder
+#IMAGEBUILDER_URL="http://downloads.openwrt.org/attitude_adjustment/12.09/ar71xx/generic/OpenWrt-ImageBuilder-ar71xx_generic-for-linux-i486.tar.bz2"
 # Caution: Snapshots are unstable
 #IMAGEBUILDER_URL="http://downloads.openwrt.org/snapshots/trunk/ar71xx/OpenWrt-ImageBuilder-ar71xx_generic-for-linux-x86_64.tar.bz2"
-IMAGEBUILDER_URL="https://downloads.openwrt.org/chaos_calmer/15.05/x86/64/OpenWrt-ImageBuilder-15.05-x86-64.Linux-x86_64.tar.bz2"
+IMAGEBUILDER_URL=${IMAGEBUILDER_URL:-https://downloads.openwrt.org/chaos_calmer/15.05/x86/64/OpenWrt-ImageBuilder-15.05-x86-64.Linux-x86_64.tar.bz2}
 archive=$(basename $IMAGEBUILDER_URL)
 
 
