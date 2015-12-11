@@ -1,0 +1,15 @@
+# Tor Router profile
+# two network interfaces will be configured (eth0,eth1)
+# all tcp traffic will be routed through tor
+#
+# for a qemu vm : PLATFORM='' IMAGEBUILDER_URL='https://downloads.openwrt.org/chaos_calmer/15.05/x86/64/OpenWrt-ImageBuilder-15.05-x86-64.Linux-x86_64.tar.bz2' ./prepare
+core
+core/firstrun
+minimal/no-ppp
+# eth0:dhcp-client
+network/eth-dhcp
+# eth1: dhcp-server, named 'tor-br'
+# configure firewall tor tor itf
+network/secondary-eth-static-tor
+# configure nat-ing for br-tor, enable tor daemon
+network/torrouter

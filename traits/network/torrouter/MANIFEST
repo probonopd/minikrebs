@@ -1,1 +1,1 @@
-PACKAGES="tor"
+PACKAGES="tor iptables-mod-nat-extra"

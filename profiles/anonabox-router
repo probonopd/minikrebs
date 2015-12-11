@@ -1,7 +1,0 @@
-core
-core/firstrun
-minimal/no-ppp
-network/eth-dhcp
-network/secondary-eth-static-tor
-network/tor
-network/torrouter
