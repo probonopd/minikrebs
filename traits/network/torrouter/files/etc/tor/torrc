@@ -1,6 +1,6 @@
 RunAsDaemon 1
 # TODO: switch to warn
-Log notice stderr
+Log notice syslog
 DataDirectory /var/lib/tor
 User tor
 PidFile /var/run/tor.pid
@@ -14,5 +14,5 @@ DNSPort 0.0.0.0:9056
 # TODO: tuning of timeouts
 KeepalivePeriod 60
 CircuitBuildTimeout 20
-NewCircuitBuildPeriod 30
+NewCircuitPeriod 30
 AvoidDiskWrites 1
