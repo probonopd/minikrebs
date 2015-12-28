@@ -5,9 +5,10 @@ env:
   - TRAIT=captive PLATFORM=DIR505A1 IMAGEBUILDER_URL="https://downloads.openwrt.org/chaos_calmer/15.05/ar71xx/generic/OpenWrt-ImageBuilder-15.05-ar71xx-generic.Linux-x86_64.tar.bz2"
 
 script:
+  - env
   - git clone https://github.com/probonopd/minikrebs.git
   - cd minikrebs/
   - ./prepare $TRAIT
   - ./builder/init
   - ls -lh ./builder/bin/*/*-squashfs-*.bin
-  - find ./builder/bin/*/ -name "*-squashfs-*.bin" -exec bash -e bintray.sh {} \; 
+  - find ./builder/bin -type f -name "*squash*bin" -exec bash -e bintray.sh {} \; 
