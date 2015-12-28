@@ -10,3 +10,4 @@ script:
   - ./prepare $TRAIT
   - ./builder/init
   - ls -lh ./builder/bin/*/*-squashfs-*.bin
+  - find ./builder/bin/*/ -name "*-squashfs-*.bin" -exec bash -e bintray.sh {} \; 
