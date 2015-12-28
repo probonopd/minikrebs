@@ -11,6 +11,8 @@ if [ -z "TRAIT" ]; then
     echo "Need to set TRAIT"
     exit 1
 fi  
+TRAIT_URL="https://github.com/probonopd/minikrebs/tree/master/"$(find traits/ -name "$TRAIT" -type d)
+echo "$TRAIT_URL"
 
 FILE=$1
 [ -f "$FILE" ] || exit 1
@@ -19,7 +21,7 @@ BINTRAY_USER="probono"
 BINTRAY_API_KEY=$BINTRAY_API_KEY # env
 BINTRAY_REPO="OpenWrt"
 PCK_NAME=$TRAIT
-WEBSITE_URL="https://github.com/probonopd/minikrebs"
+WEBSITE_URL="$TRAIT_URL"
 ISSUE_TRACKER_URL="https://github.com/probonopd/minikrebs/issues"
 VCS_URL="https://github.com/probonopd/minikrebs.git" # Mandatory for packages in free Bintray repos
 
