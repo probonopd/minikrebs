@@ -1,0 +1,12 @@
+sudo: false
+
+env:
+  - export IMAGEBUILDER_URL="https://downloads.openwrt.org/chaos_calmer/15.05/ar71xx/generic/OpenWrt-ImageBuilder-15.05-ar71xx-generic.Linux-x86_64.tar.bz2"
+  - export PLATFORM=DIR505A1
+
+script:
+  - git clone https://github.com/probonopd/minikrebs.git
+  - cd minikrebs/
+  - ./prepare radio
+  - ./builder/init
+  - ls -lh ./builder/bin/*/*-squashfs-*.bin
