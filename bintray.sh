@@ -7,7 +7,10 @@ trap 'exit 1' ERR
 
 API=https://api.bintray.com
 
-[ -f "$TRAIT" ] || exit 1
+if [ -z "TRAIT" ]; then
+    echo "Need to set TRAIT"
+    exit 1
+fi  
 
 FILE=$1
 [ -f "$FILE" ] || exit 1
