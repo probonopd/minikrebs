@@ -1,8 +1,12 @@
 #!/bin/bash
-set -euf
-# Caution: Snapshots are unstable
-IMAGEBUILDER_URL="https://downloads.openwrt.org/barrier_breaker/14.07/ar71xx/generic/OpenWrt-ImageBuilder-ar71xx_generic-for-linux-x86_64.tar.bz2"
-# IMAGEBUILDER_URL="https://downloads.openwrt.org/snapshots/trunk/ramips/generic/OpenWrt-ImageBuilder-ramips_rt305x-for-linux-x86_64.tar.bz2"
+set -ef
+
+# $IMAGEBUILDER_URL can be an environment variable set outside this script
+if [ -z "$IMAGEBUILDER_URL" ] ; then
+  IMAGEBUILDER_URL="https://downloads.openwrt.org/chaos_calmer/15.05/ar71xx/generic/OpenWrt-ImageBuilder-15.05-ar71xx-generic.Linux-x86_64.tar.bz2"
+  # IMAGEBUILDER_URL="https://downloads.openwrt.org/snapshots/trunk/ramips/generic/OpenWrt-ImageBuilder-ramips-rt305x.Linux-x86_64.tar.bz2"
+  # Caution: Snapshots are unstable
+fi
 
 cd $(dirname $(readlink -f $0))
 git submodule update --init
@@ -13,9 +17,9 @@ if [  -z "${1:-}"  ];then
     exit 1
 fi
 PROFILE=$1
-if [ ! -e builder/Makefile ]; then
+if [ ! -e builder/init ]; then
     wget $IMAGEBUILDER_URL -O- | tar xjf -
-    mv OpenWrt-ImageBuilder-*-for-linux-x86_64 builder
+    mv OpenWrt-* builder
     echo "Builder successfully downloaded"
 else
     echo "Builder already installed, skipping download"
