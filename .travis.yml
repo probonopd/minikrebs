@@ -11,4 +11,4 @@ script:
   - ./prepare $TRAIT
   - ./builder/init
   - ls -lh ./builder/bin/*/*-squashfs-*.bin
-  - find ./builder/bin -type f -name "*squash*bin" -exec bash -e bintray.sh {} \; 
+  - find ./builder/bin -type f -name "*squash*bin" -exec bash -ex bintray.sh {} \; 
