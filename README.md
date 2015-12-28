@@ -43,6 +43,16 @@ export PLATFORM=TLWR710 # for TP-LINK TL-WR710N
 
 For more information see doc/radio.md
 
+### Captive
+
+A captive portal.
+To be written
+
+### Netem
+
+A worst-case network simulator.
+To be written
+
 ## Supported hardware
 
 ### TP-Link TL-WR703N
