@@ -19,6 +19,7 @@ fi
 PROFILE=$1
 if [ ! -e builder/init ]; then
     wget $IMAGEBUILDER_URL -O- | tar xjf -
+    ls -lh .
     mv OpenWrt-* builder
     echo "Builder successfully downloaded"
 else
