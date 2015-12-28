@@ -11,10 +11,20 @@ sleep 1
 amixer sset $SPEAKER 5dB+
 
 # FIXME: Can I send this to a different mixer that is not affected by the reduced overall volume?
-LANG=de
+LANG=$1
+shift
 TEXT=$(echo "$@" | sed -e 's|\ |+|g')
 echo $TEXT
-URL="http://mary.dfki.de:59125/process?INPUT_TYPE=TEXT&OUTPUT_TYPE=AUDIO&AUDIO=WAVE_FILE&LOCALE=$LANG&VOICE=bits3-hsmm&INPUT_TEXT=$TEXT"
+
+if [ "$LANG" == "de" ] ; then
+  VOICE="&VOICE=bits3-hsmm"
+fi
+
+if [ "$LANG" == "en" ] ; then
+  LANG="en_US"
+fi
+
+URL="http://mary.dfki.de:59125/process?INPUT_TYPE=TEXT&OUTPUT_TYPE=AUDIO&AUDIO=WAVE_FILE&LOCALE=$LANG$VOICE&INPUT_TEXT=$TEXT"
 echo $URL
 
 wget -U "" "$URL" -O - | aplay -Dplug:dmix
@@ -24,4 +34,3 @@ amixer sset $SPEAKER $VOLUME
 
 # Continue any running madplay
 kill -SIGCONT $(pidof madplay)
-
