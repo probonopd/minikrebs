@@ -103,8 +103,6 @@ echo '
 <p></p>
 '
 
-echo '</div>'
-
 # One button per station
 echo '<center>'
 echo '<a href="?browse=">Regional</a> | '
@@ -138,6 +136,7 @@ echo '<p><a class="btn btn-default btn-sm" role="button" href="/cgi-bin/luci/">S
 echo '<p><a href="https://github.com/probonopd/" target="_blank"><i class="fa fa-github"></i> Fork me on Github</a></p>'
 echo "</center>"
 
+echo '</div>'
 
 # For centering (end)
 echo '
@@ -289,12 +288,12 @@ fi
 
 if [ "$STRING" == "voldown" ] ; then
   SPEAKER=$(amixer scontrols | head -n 1 | cut -d "'" -f 2)
-  amixer set $SPEAKER 5dB-
+  amixer set $SPEAKER 2dB-
 fi
 
 if [ "$STRING" == "volup" ] ; then
   SPEAKER=$(amixer scontrols | head -n 1 | cut -d "'" -f 2)
-  amixer set $SPEAKER 5dB+
+  amixer set $SPEAKER 2dB+
 fi   
 
 if [ "$QUERY_STRING" == "mute" ] ; then
