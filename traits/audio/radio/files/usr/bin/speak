@@ -3,12 +3,12 @@
 SPEAKER=$(amixer scontrols | head -n 1 | cut -d "'" -f 2)
 VOLUME=$(amixer get $SPEAKER | grep "\[" | head -n 1 | cut -d "[" -f 2 | cut -d "]" -f 1)
 
-# Increase overall volume
-amixer sset $SPEAKER 7dB+
-
 # Pause any running madplay
 kill -SIGSTOP $(pidof madplay)
 sleep 1
+
+# Increase overall volume
+amixer sset $SPEAKER 5dB+
 
 # FIXME: Can I send this to a different mixer that is not affected by the reduced overall volume?
 LANG=de
@@ -24,3 +24,4 @@ amixer sset $SPEAKER $VOLUME
 
 # Continue any running madplay
 kill -SIGCONT $(pidof madplay)
+
