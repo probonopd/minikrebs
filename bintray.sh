@@ -7,10 +7,10 @@ trap 'exit 1' ERR
 
 API=https://api.bintray.com
 
-[ -f "$TRAIT" ] || exit
+[ -f "$TRAIT" ] || exit 1
 
 FILE=$1
-[ -f "$FILE" ] || exit
+[ -f "$FILE" ] || exit 1
 
 BINTRAY_USER="probono"
 BINTRAY_API_KEY=$BINTRAY_API_KEY # env
