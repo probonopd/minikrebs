@@ -28,41 +28,6 @@ fi
 
 #####
 
-# We do not use this currently. TODO: Move it to its own init script
-zeroconf_announce()
-{
-# Launch Bonjour but do not install it since it is too large
-if [ ! -e /tmp/usr/bin/mDNSResponder ] ; then
-cd /tmp
-mkdir mDNSResponder
-cd mDNSResponder
-wget http://downloads.openwrt.org/attitude_adjustment/12.09/ar71xx/generic/packages/mdns-utils_214.3.2-4_ar71xx.ipk
-tar xzf *.ipk
-tar xzf data.tar.gz
-rm *ipk *gz debian-binary
-rm -rf ./usr/bin/dns-sd ./usr/bin/mDNSClient ./usr/bin/mDNSIdentify ./usr/bin/mDNSNetMonitor ./usr/bin/mDNSProxyResponder ./usr/lib
-HOSTNAME=$(uci get system.@system[0].hostname)
-cat > ./etc/mDNSResponder.conf <<EOxF
-$HOSTNAME SSH
-_ssh._tcp. local
-22
-
-$HOSTNAME Web Interface
-_http._tcp local
-80
-path=/cgi-bin/radio
-
-$HOSTNAME SFTP
-_sftp-ssh._tcp local
-22
-EOxF
-./usr/bin/mDNSResponder  -f ./etc/mDNSResponder.conf &
-cd -
-fi
-}
-
-#####
-
 nr_to_name()
 {
   NUMBER_OF_STATIONS=$(uci show radio | grep -e "=station$" | wc -l)
@@ -155,11 +120,8 @@ dilandau()
 {
   SEARCH=$(echo $1 | sed -e 's| |%20|g')
   echo $SEARCH
-  wget -U "" "http://www.dilandau.eu/download-songs-mp3/$SEARCH/1.html" -O /tmp/_html
-  SNIP=$(grep -o -e "a\ download.*" /tmp/_html | head -n 1)
-  PART1=$(echo $SNIP | cut -d '"' -f 4)
-  PART2=$(echo $SNIP | cut -d '"' -f 6)
-  play $PART1$PART2
+  URL=$(wget "http://pleer.com/mobile/search?q=$SEARCH" -O - | grep download | grep -Eo "http.*?mp3" | head -n 1)
+  play "$URL"
 }
 
 playonce()
@@ -229,4 +191,3 @@ play http://irmagic.carina.uberspace.de/radio/startup.mp3
 while true; do
   play_next
 done
-
