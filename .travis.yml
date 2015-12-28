@@ -1,5 +1,8 @@
 sudo: false
 
+# TODO: Restructure this so that multiple traits and platforms can be built during one run
+# because ImageBuilders can be quite large (rt305x is 1.5 GB) this will increase efficiency
+
 env:
   global:
     - TRAIT=radio
