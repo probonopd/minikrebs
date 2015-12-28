@@ -43,7 +43,8 @@ fi
 
 CURL="curl -u${BINTRAY_USER}:${BINTRAY_API_KEY} -H Content-Type:application/json -H Accept:application/json"
 
-VERSION=$(git rev-list --count HEAD).$(git log -n 1 | head -n 1 | sed -e 's/^commit //' | head -c 8)
+VERSION=$(cat ./builder/build_dir/target-*/root-*/etc/banner | grep "(" | cut -d "(" -f 2 | cut -d ")" -f 1 | sed -e 's/, /./g')
+# VERSION=$(git rev-list --count HEAD).$(git log -n 1 | head -n 1 | sed -e 's/^commit //' | head -c 8)
 
 if [ "$VERSION" == "" ] ; then
   echo "* VERSION missing, exiting"
