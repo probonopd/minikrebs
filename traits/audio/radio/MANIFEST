@@ -1,2 +1,1 @@
-PACKAGES="luci-mod-admin-full uhttpd libiwinfo-lua luci-theme-bootstrap ser2net alsa-utils madplay coreutils-stty kmod-hid-generic kmod-usb-hid kmod-input-evdev triggerhappy kmod-usb-acm"
-# mdnsresponder nano
+PACKAGES="luci-mod-admin-full uhttpd libiwinfo-lua luci-theme-bootstrap alsa-utils madplay coreutils-stty kmod-hid-generic kmod-usb-hid kmod-input-evdev triggerhappy kmod-usb-acm openssh-sftp-server"
