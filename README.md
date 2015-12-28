@@ -2,7 +2,15 @@
 
 This is a customized OpenWrt firmware image generator based on http://shackspace.de/wiki/doku.php?id=project:minikrebs 
 
-## Build image that contains a web radio and podcast client
+You can download some of the generated firmware images from this [Bintray repository](https://bintray.com/probono/OpenWrt).
+
+__CAUTION:__ These images are entirely __untested__ and you are running them on __your own risk__. You might brick your device, so if you do not know how to debrick your device e.g., using a serial console, don't use these images.
+
+## Profiles
+
+### Radio
+
+Builds an image that contains a web radio and podcast client.
 
 You can use this firmware image generator to produce a firmware that does the following:
 - Play web radio streams
@@ -35,7 +43,21 @@ export PLATFORM=TLWR710 # for TP-LINK TL-WR710N
 
 For more information see doc/radio.md
 
-## Build image for 7 EUR router A5-V11
+## Supported hardware
+
+### TP-Link TL-WR703N
+
+To be written
+
+### TP-Link TL-WR710N
+
+To be written
+
+### D-Link DIR-505 Mobile Companion
+
+To be written
+
+### Unbranded A5-V11 (7 EUR router)
 
 ![router](https://cloud.githubusercontent.com/assets/2480569/5695474/788bbd18-99a6-11e4-83d8-e110ed81cbe8.jpg)
 
