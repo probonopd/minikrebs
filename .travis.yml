@@ -1,8 +1,9 @@
 sudo: false
 
 env:
-  - TRAIT=radio PLATFORM=DIR505A1 IMAGEBUILDER_URL="https://downloads.openwrt.org/chaos_calmer/15.05/ar71xx/generic/OpenWrt-ImageBuilder-15.05-ar71xx-generic.Linux-x86_64.tar.bz2"
-  - TRAIT=captive PLATFORM=DIR505A1 IMAGEBUILDER_URL="https://downloads.openwrt.org/chaos_calmer/15.05/ar71xx/generic/OpenWrt-ImageBuilder-15.05-ar71xx-generic.Linux-x86_64.tar.bz2"
+#  - TRAIT=radio PLATFORM=DIR505A1 IMAGEBUILDER_URL="https://downloads.openwrt.org/chaos_calmer/15.05/ar71xx/generic/OpenWrt-ImageBuilder-15.05-ar71xx-generic.Linux-x86_64.tar.bz2"
+#  - TRAIT=captive PLATFORM=DIR505A1 IMAGEBUILDER_URL="https://downloads.openwrt.org/chaos_calmer/15.05/ar71xx/generic/OpenWrt-ImageBuilder-15.05-ar71xx-generic.Linux-x86_64.tar.bz2"
+  - TRAIT=netem PLATFORM=DIR505A1 IMAGEBUILDER_URL="https://downloads.openwrt.org/chaos_calmer/15.05/ar71xx/generic/OpenWrt-ImageBuilder-15.05-ar71xx-generic.Linux-x86_64.tar.bz2"
 
 script:
   - env
