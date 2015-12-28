@@ -85,7 +85,7 @@ overlay()
 
 id()
 {
-   wget -U "" "http://translate.google.com/translate_tts?tl=$1&q=$2" -O - | madplay --fade-in=0.1 -o wave:- - | aplay -Dplug:dmix &
+   /usr/bin/speak $1 $2
 }
 
 podcast()
