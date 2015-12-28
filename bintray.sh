@@ -14,6 +14,9 @@ fi
 TRAIT_URL="https://github.com/probonopd/minikrebs/tree/master/"$(find traits/ -name "$TRAIT" -type d)
 echo "$TRAIT_URL"
 
+# Get description from trait README if it exists
+DESCRIPTION=$(cat $(find traits -type f -wholename "*$TRAIT/READM*")) || true
+
 FILE=$1
 [ -f "$FILE" ] || exit 1
 
