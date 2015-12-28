@@ -17,17 +17,6 @@ done
 
 #####
 
-# Enable sftp, work around https://trac.cyberduck.io/ticket/4161
-# Needs 44.5K but for me removes the need for nano on the device
-if [ ! -e /usr/libexec/sftp-server ] ; then
-  opkg update
-  opkg -d ram install openssh-sftp-server
-  mkdir -p /usr/libexec
-  cp /tmp/usr/lib/sftp-server /usr/libexec/
-fi
-
-#####
-
 nr_to_name()
 {
   NUMBER_OF_STATIONS=$(uci show radio | grep -e "=station$" | wc -l)
