@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ef
+set -e
 
 # $IMAGEBUILDER_URL can be an environment variable set outside this script
 if [ -z "$IMAGEBUILDER_URL" ] ; then
@@ -18,9 +18,9 @@ if [  -z "${1:-}"  ];then
 fi
 PROFILE=$1
 if [ ! -e builder/init ]; then
-    wget $IMAGEBUILDER_URL -O- | tar xjf -
-    ls -lh .
-    mv OpenWrt-* builder
+    wget --trust-server-names -c "$IMAGEBUILDER_URL" 
+    tar xf $(basename "$IMAGEBUILDER_URL")
+    mv OpenWrt-*-x86_64 builder
     echo "Builder successfully downloaded"
 else
     echo "Builder already installed, skipping download"
