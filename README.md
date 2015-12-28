@@ -1,10 +1,8 @@
-Customized OpenWrt image generator
-==================================
+# Customized OpenWrt image generator [![Build Status](https://travis-ci.org/probonopd/minikrebs.svg?branch=master)](https://travis-ci.org/probonopd/minikrebs)
 
 This is a customized OpenWrt firmware image generator based on http://shackspace.de/wiki/doku.php?id=project:minikrebs 
 
-Build image that contains a web radio and podcast client
---------------------------------------------------------
+## Build image that contains a web radio and podcast client
 
 You can use this firmware image generator to produce a firmware that does the following:
 - Play web radio streams
@@ -37,8 +35,7 @@ export PLATFORM=TLWR710 # for TP-LINK TL-WR710N
 
 For more information see doc/radio.md
 
-Build image for 7 EUR router A5-V11 
------------------------------------
+## Build image for 7 EUR router A5-V11
 
 ![router](https://cloud.githubusercontent.com/assets/2480569/5695474/788bbd18-99a6-11e4-83d8-e110ed81cbe8.jpg)
 
