@@ -158,11 +158,16 @@ STRING=$(echo $REQUEST_URI | cut -d "?" -f 2 | cut -d "=" -f 1)
 # Appending "&render=json" would give JSON instead
 # which might be useful for client-side processing
 #
+# This is for debugging only. Obtain and use your own Partner ID for production
+PARTNER_ID=$(echo 376H12y5z23q2u918m5722N7X11 |  sed "s/[[:digit:].-]//g")
+# Derive a serial number from the MAC address of eth0. Useful for presets
+SERIAL=$(ifconfig | grep eth0 | grep "HWaddr" | cut -d " " -f 11 | md5sum | sed "s/[[:alpha:].-]//g")
+#
 
 # Given a radiotime.com station ID, play the stream
 if [ "$STRING" == "radiotime" ] ; then
   ID=$(echo $REQUEST_URI | cut -d "?" -f 2 | cut -d "=" -f 2)
-  URL="http://opml.radiotime.com/Tune.ashx?id=$ID&formats=mp3"
+  URL="http://opml.radiotime.com/Tune.ashx?id=$ID&formats=mp3&partnerId=$PARTNER_ID&serial=$SERIAL"
   # echo $URL
   STREAM=$(wget "$URL" -U "" -O - -q | grep "http" | head -n 1)
   echo $STREAM
@@ -189,14 +194,14 @@ fi
 # Search radiotime.com
 if [ "$STRING" == "q" ] ; then
   Q=$(echo $REQUEST_URI | cut -d "?" -f 2 | cut -d "=" -f 2)
-  REQUEST_URI="?browse=http://opml.radiotime.com/Search.ashx?query=$Q&formats=mp3"
+  REQUEST_URI="?browse=http://opml.radiotime.com/Search.ashx?query=$Q&formats=mp3&partnerId=$PARTNER_ID&serial=$SERIAL"
   STRING="browse"
 fi
 
 # Browse radiotime.com podcast for episodes
 if [ "$STRING" == "pbrowse" ] ; then
   ID=$(echo $REQUEST_URI | cut -d "?" -f 2 | cut -d "=" -f 2)
-  REQUEST_URI="?browse=http://opml.radiotime.com/Tune.ashx?c=pbrowse&id=$ID&flatten=true&formats=mp3"
+  REQUEST_URI="?browse=http://opml.radiotime.com/Tune.ashx?c=pbrowse&id=$ID&flatten=true&formats=mp3&partnerId=$PARTNER_ID&serial=$SERIAL"
   STRING="browse"
 fi
 
@@ -207,7 +212,7 @@ if [ "$STRING" == "browse" ] ; then
   URL="$URL1?$URL2"
   # echo $URL
   if [ "$URL" == "?" ] ; then
-    URL="http://opml.radiotime.com/Browse.ashx?c=local&formats=mp3"
+    URL="http://opml.radiotime.com/Browse.ashx?c=local&formats=mp3&partnerId=$PARTNER_ID&serial=$SERIAL"
     if [ ! -e /tmp/local.xml ] ; then
       echo "Downloading..."
       wget "$URL" -U "" -O - -q  > /tmp/local.xml
