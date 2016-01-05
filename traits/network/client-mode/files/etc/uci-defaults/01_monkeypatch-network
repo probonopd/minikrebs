@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# For Ethernet DHCP client mode, we want the default 
+# interface to be WAN rather than LAN
+
+# Up to Chaos Calmer
+if [ -e /etc/uci-defaults/02_network ] ; then
+  sed -i -e 's|ucidef_set_interface_lan |ucidef_set_interface_wan |g' /etc/uci-defaults/02_network
+fi
+
+# After 2015-12-11 https://dev.openwrt.org/changeset/47867/
+if [ -e /etc/board.d/02_network ] ; then
+  sed -i -e 's|ucidef_set_interface_lan |ucidef_set_interface_wan |g' /etc/board.d/02_network
+fi
