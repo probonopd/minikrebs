@@ -20,7 +20,10 @@ done
 nr_to_name()
 {
   NUMBER_OF_STATIONS=$(uci show radio | grep -e "=station$" | wc -l)
-  if [ $1 -le $NUMBER_OF_STATIONS ] ; then
+  if [ $1 -lt 1 ] ; then
+    uci set radio.next=$NUMBER_OF_STATIONS # if 0 or negative then we set to the highest station
+    echo $(uci show radio | grep -e "=station$" | cut -d "." -f 2 | cut -d "=" -f 1 | head -n $1 | tail -n 1)
+  elif [ $1 -le $NUMBER_OF_STATIONS ] ; then
     echo $(uci show radio | grep -e "=station$" | cut -d "." -f 2 | cut -d "=" -f 1 | head -n $1 | tail -n 1)
   else
     uci set radio.next=1 # Reset
