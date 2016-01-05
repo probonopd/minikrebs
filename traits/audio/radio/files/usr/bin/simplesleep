@@ -1,9 +1,13 @@
 #!/bin/sh
 
-# Not clean
-killall sleep
+MINS=90
+SECS=$(($MINS*60)) 
 
-NEWMINS=90
-NEWSECS=$(($NEWMINS*60)) 
+NUM=$( ps | grep "sleep $SECS" | wc -l )
+echo $NUM
 
-sleep $NEWSECS ; /etc/init.d/radio stop
+# Only if we are not already in the sleep state, we start to sleep
+if [ $NUM == 1 ]; then
+  sleep $SECS
+  /etc/init.d/radio stop
+fi
