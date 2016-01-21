@@ -1,0 +1,13 @@
+#! /bin/sh
+
+mkdir -p /usr/lib/tor
+
+torip=$(uci get network.tor.ipaddr)
+
+/etc/init.d/tor enable
+/etc/init.d/tor start
+
+cat >>/etc/tor/torrc <<EOF
+TransListenAddress $torip
+DNSListenAddress $torip
+EOF

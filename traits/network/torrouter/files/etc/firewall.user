@@ -1,8 +1,0 @@
-# part of traits/network/torrouter
-# ASSUMPTION: network.tor is set
-set -euf
-net=br-tor
-torip=$(uci get network.tor.ipaddr)
-
-iptables -t nat -A PREROUTING -i br-tor -p udp --dport 53 -j REDIRECT --to-ports 9053
-iptables -t nat -A PREROUTING -i br-tor -p tcp --syn ! -d 192.168.2.1 -j REDIRECT --to-ports 9040

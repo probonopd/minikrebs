@@ -1,0 +1,4 @@
+Starts up Tor daemon on the local network
+
+Uses the "br-tor" (TODO) interface for routing and gets the ip address of the local
+network with `uci get network.tor.ipaddr`

@@ -1,0 +1,16 @@
+#!/bin/sh
+set -euf
+device=radio0
+
+
+uci batch <<EOF
+# add a new network itf: br-tor
+# enable the network interface
+set wireless.${device}.disabled=0
+set wireless.@wifi-iface[0].ssid="connecTOR"
+set wireless.@wifi-iface[0].network=tor
+set wireless.@wifi-iface[0].isolate=1
+set wireless.@wifi-iface[0].encryption=none
+EOF
+uci commit wireless
+wifi reload

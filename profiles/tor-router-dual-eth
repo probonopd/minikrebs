@@ -10,6 +10,6 @@ minimal/no-ppp
 network/eth-dhcp
 # eth1: dhcp-server, named 'tor-br'
 # configure firewall tor tor itf
-network/secondary-eth-static-tor
+network/tor/secondary-eth-static-tor
 # configure nat-ing for br-tor, enable tor daemon
-network/torrouter
+network/tor/torrouter
