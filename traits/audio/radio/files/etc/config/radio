@@ -58,7 +58,7 @@ config station 'freakshow'
 	option sidtype 'spoken'
 	option lang 'en_US'
 	option type 'rss'
-	option url 'http://feeds.feedburner.com/mobile-macs-enhanced-podcast'
+	option url 'http://feeds.metaebene.me/freakshow/mp3'
 	option lasturl 'http://feedproxy.google.com/~r/mobile-macs-enhanced-podcast/~5/n90DCsjxmes/mm114-ueber-state-redet-man-nicht-state-hat-man.mp3'
 	option speakname 'Freakshow'
 
