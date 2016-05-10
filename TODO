@@ -1,1 +1,2 @@
 - trait for setting wan to lan (or something)
+- Solve PROFILE naming which differs in OWRT and minikrebs ( OWRT Profiles are called PLATFORM)
