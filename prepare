@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euf
+set -eu
 # TODO: provide a means to switch builder. right now, simply move builder to builder-ar71xx and symlink to builder
 #IMAGEBUILDER_URL="http://downloads.openwrt.org/attitude_adjustment/12.09/ar71xx/generic/OpenWrt-ImageBuilder-ar71xx_generic-for-linux-i486.tar.bz2"
 # Caution: Snapshots are unstable

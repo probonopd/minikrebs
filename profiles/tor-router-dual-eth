@@ -1,4 +1,4 @@
-# Tor Router profile
+# Dual-Ethernet Tor Router profile
 # two network interfaces will be configured (eth0,eth1)
 # all tcp traffic will be routed through tor
 #
