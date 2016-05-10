@@ -1,0 +1,9 @@
+core
+minimal/no-ppp
+minimal/no-dnsmasq
+minimal/no-iptables
+minimal/no-ipv6
+minimal/no-firewall
+network/client-mode
+network/avahi
+network/netem

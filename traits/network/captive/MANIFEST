@@ -1,0 +1,1 @@
+PACKAGES="luci-mod-admin-full uhttpd libiwinfo-lua luci-theme-bootstrap nano iptables-mod-conntrack-extra firewall luci-app-firewall nodogsplash"

@@ -1,30 +1,17 @@
 #!/bin/sh
 # This assumes a sketch on the Arduino on ttyATH0 that outputs hashes like 7354AEB4
+
+# GPIO 29 is on "pin" R17-S (south end of resistor 17)
+# This is connected to the Arudino reset pin, hence we need to change it from "grounded" to "isolated"
+# so that the Arduino can start running
+echo 29 > /sys/class/gpio/export
+echo out > /sys/class/gpio/gpio29/direction
+echo 1 > /sys/class/gpio/gpio29/value # isolated
  
 stty -F /dev/ttyATH0 cs8 57600 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts
  
 SPEAKER=$(amixer scontrols | head -n 1 | cut -d "'" -f 2)
 LAST=0
-
-tune()
-{
-  # logger "Tune to $1"
-  # Determine what should be played next
-  if [ "$1" == "$LAST" ] ; then
-    return # Do nothing in this case, we are already tuned
-  fi
-  TUNE=$1
-  if [ "$TUNE" == "up" ] ; then
-    TUNE=$(($(uci get radio.next)+1))
-  fi
-  if [ "$TUNE" == "down" ] ; then
-    TUNE=$(($(uci get radio.next)-1))
-  fi
-  uci set radio.next=$TUNE
-  # Kill the currently running radio streams but not the radio script itself
-  killall -9 madplay wget 2>/dev/null
-  LAST=$TUNE
-}
 
 volume()
 {

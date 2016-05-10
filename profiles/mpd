@@ -1,0 +1,8 @@
+core
+minimal/no-ppp
+minimal/no-ipv6
+minimal/no-dnsmasq
+minimal/no-iptables
+minimal/no-firewall
+network/client-mode
+audio/mpd

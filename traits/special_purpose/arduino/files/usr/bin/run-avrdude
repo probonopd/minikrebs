@@ -1,0 +1,31 @@
+#!/bin/sh
+ 
+#echo 1 > /sys/class/gpio/gpio21/value
+#avrdude -c linuxgpio -C /etc/avrdude.conf -p m32u4 -U lfuse:w:0xFF:m -U hfuse:w:0xD8:m -U efuse:w:0xFB:m -Uflash:w:$1:i $2
+#echo 0 > /sys/class/gpio/gpio21/value
+#echo "$2" > /s2
+echo "" > /dev/ttyACM0
+ 
+lsusb|grep 0036
+if [ "$?"x == "0"x ];then
+echo LEONARDO
+reset-arduino /dev/ttyACM0
+avrdude -V -p atmega32u4 -c avr109 -b 57600 -P /dev/ttyACM0 -C /etc/avrdude.conf -U flash:w:$1 $2
+fi
+ 
+lsusb|grep 0043
+if [ "$?"x == "0"x ];then
+echo UNO
+avrdude -V -p m328p -c arduino -b 115200 -P /dev/ttyACM0 -C /etc/avrdude.conf -U flash:w:$1 $2
+fi
+ 
+lsusb|grep 0042
+if [ "$?"x == "0"x ];then
+echo MEGA
+avrdude -V -C/etc/avrdude.conf -patmega2560 -cstk500v2 -P/dev/ttyACM0 -b115200 -D -Uflash:w:$1 $2
+fi
+ 
+echo "" > /dev/ttyACM0
+ 
+# Enable every sketch to communicate with IDE (without the Bridge)
+ser2net -C 6571:raw:0:/dev/ttyACM0:9600

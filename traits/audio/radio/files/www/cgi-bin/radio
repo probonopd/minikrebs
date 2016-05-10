@@ -47,22 +47,7 @@ echo '
 
 echo '</head>
 <body>
-'
-
-# Display an error if USB sound card is not connected
-SPEAKER=$(amixer scontrols | head -n 1 | cut -d "'" -f 2)
-if [ "$SPEAKER" == "" ] ; then
-  echo '
-<div class="alert alert-error">
-    <a href="#" class="close" data-dismiss="alert">&times;</a>
-    <strong>Error!</strong> No USB sound device found. Please connect a compatible USB sound device.
-</div>
-</body>             
-</html>
-'
-fi
-
-echo '<div class="container theme-showcase">'
+<div class="container theme-showcase">'
 
 # For centering (begin)
 echo '
@@ -109,12 +94,14 @@ echo '
 <a href="?unmute" class="btn btn-default btn-sm" role="button"><i class="fa fa-bullhorn"></i> Unmute</a>
 <a href="?voldown" class="btn btn-default btn-sm" role="button">&nbsp;<i class="fa fa-volume-down"></i>&nbsp;</a>
 <a href="?volup" class="btn btn-default btn-sm" role="button">&nbsp;<i class="fa fa-volume-up"></i>&nbsp;</a>
+<a href="?radiostart" class="btn btn-default btn-sm" role="button">Start</a>
+<a href="?radiostop" class="btn btn-default btn-sm" role="button">Stop</a>
+<a href="?squeezestart" class="btn btn-default btn-sm" role="button">Squeeze</a></div>
+<a href="?shairport" class="btn btn-default btn-sm" role="button">Shairport</a>
 </div>
 </center>
 <p></p>
 '
-
-echo '</div>'
 
 # One button per station
 echo '<center>'
@@ -142,12 +129,14 @@ for SONG in "sunchyme" "orinoco flow" "toto africa" "wedding rain liz story" \
 "bolero ravel" "Tamee Harrison" ; do
   echo '<a href="?song='$SONG'">'$SONG'</a> | '
 done
+echo '<a href="?song=http://www.einstein-website.de/z_biography/einstein1930.mp3">Einstein</a>'
 
 echo '<p></p>'
 echo '<p><a class="btn btn-default btn-sm" role="button" href="/cgi-bin/luci/">Settings</a></p>'
 echo '<p><a href="https://github.com/probonopd/" target="_blank"><i class="fa fa-github"></i> Fork me on Github</a></p>'
 echo "</center>"
 
+echo '</div>'
 
 # For centering (end)
 echo '
@@ -169,11 +158,16 @@ STRING=$(echo $REQUEST_URI | cut -d "?" -f 2 | cut -d "=" -f 1)
 # Appending "&render=json" would give JSON instead
 # which might be useful for client-side processing
 #
+# This is for debugging only. Obtain and use your own Partner ID for production
+PARTNER_ID=$(echo 376H12y5z23q2u918m5722N7X11 |  sed "s/[[:digit:].-]//g")
+# Derive a serial number from the MAC address of eth0. Useful for presets
+SERIAL=$(ifconfig | grep eth0 | grep "HWaddr" | cut -d " " -f 11 | md5sum | sed "s/[[:alpha:].-]//g")
+#
 
 # Given a radiotime.com station ID, play the stream
 if [ "$STRING" == "radiotime" ] ; then
   ID=$(echo $REQUEST_URI | cut -d "?" -f 2 | cut -d "=" -f 2)
-  URL="http://opml.radiotime.com/Tune.ashx?id=$ID&formats=mp3"
+  URL="http://opml.radiotime.com/Tune.ashx?id=$ID&formats=mp3&partnerId=$PARTNER_ID&serial=$SERIAL"
   # echo $URL
   STREAM=$(wget "$URL" -U "" -O - -q | grep "http" | head -n 1)
   echo $STREAM
@@ -189,24 +183,25 @@ if [ "$STRING" == "radiotime" ] ; then
     STREAM=$(wget "$STREAM" -U "" -O - -q | grep http | cut -d "=" -f 2 | head -n 1)  
     echo $STREAM
   fi
-  uci delete radio.ONCE
-  uci set radio.ONCE=playonce
-  uci set radio.ONCE.url="$STREAM"
-  uci set radio.ONCE.type=mp3
+  # uci delete radio.ONCE
+  RAND=$(tr -cd 0-9 </dev/urandom | head -c 3)
+  uci set radio.ONCE$RAND=playonce
+  uci set radio.ONCE$RAND.url="$STREAM"
+  uci set radio.ONCE$RAND.type=mp3
   killall madplay
 fi
 
 # Search radiotime.com
 if [ "$STRING" == "q" ] ; then
   Q=$(echo $REQUEST_URI | cut -d "?" -f 2 | cut -d "=" -f 2)
-  REQUEST_URI="?browse=http://opml.radiotime.com/Search.ashx?name=$Q&formats=mp3"
+  REQUEST_URI="?browse=http://opml.radiotime.com/Search.ashx?query=$Q&formats=mp3&partnerId=$PARTNER_ID&serial=$SERIAL"
   STRING="browse"
 fi
 
 # Browse radiotime.com podcast for episodes
 if [ "$STRING" == "pbrowse" ] ; then
   ID=$(echo $REQUEST_URI | cut -d "?" -f 2 | cut -d "=" -f 2)
-  REQUEST_URI="?browse=http://opml.radiotime.com/Tune.ashx?c=pbrowse&id=$ID&flatten=true&formats=mp3"
+  REQUEST_URI="?browse=http://opml.radiotime.com/Tune.ashx?c=pbrowse&id=$ID&flatten=true&formats=mp3&partnerId=$PARTNER_ID&serial=$SERIAL"
   STRING="browse"
 fi
 
@@ -217,7 +212,7 @@ if [ "$STRING" == "browse" ] ; then
   URL="$URL1?$URL2"
   # echo $URL
   if [ "$URL" == "?" ] ; then
-    URL="http://opml.radiotime.com/Browse.ashx?c=local&formats=mp3"
+    URL="http://opml.radiotime.com/Browse.ashx?c=local&formats=mp3&partnerId=$PARTNER_ID&serial=$SERIAL"
     if [ ! -e /tmp/local.xml ] ; then
       echo "Downloading..."
       wget "$URL" -U "" -O - -q  > /tmp/local.xml
@@ -265,18 +260,20 @@ if [ "$STRING" == "song" ] ; then
   SONG=$(echo $REQUEST_URI | cut -d "?" -f 2 | cut -d "=" -f 2)
   ENDING=$(echo $SONG| awk '{ print substr($0, length($0)-3, length($0))}')
   if [ "$ENDING" == ".mp3" ] ; then
-    uci delete radio.ONCE
-    uci set radio.ONCE=playonce
+    # uci delete radio.ONCE
+    RAND=$(tr -cd 0-9 </dev/urandom | head -c 3)
+    uci set radio.ONCE$RAND=playonce
     # We urldecode the song, since it is an URL which otherwise does not play
     SONG=$(printf $(echo "$SONG" | sed -e '1! d' -e 's/%/\\x/g'))
-    uci set radio.ONCE.url="$SONG"
-    uci set radio.ONCE.type=mp3
+    uci set radio.ONCE$RAND.url="$SONG"
+    uci set radio.ONCE$RAND.type=mp3
   else
     # We leave the song urlencoded, since it is input that way into a seach engine
-    uci delete radio.ONCE
-    uci set radio.ONCE=playonce
-    uci set radio.ONCE.title="$SONG" # This is DANGEROUS, what if some random rubbish is passed in?
-    uci set radio.ONCE.type=song
+    # uci delete radio.ONCE
+    RAND=$(tr -cd 0-9 </dev/urandom | head -c 3)
+    uci set radio.ONCE$RAND=playonce
+    uci set radio.ONCE$RAND.title="$SONG" # This is DANGEROUS, what if some random rubbish is passed in?
+    uci set radio.ONCE$RAND.type=song
   fi
   killall madplay
 fi
@@ -296,12 +293,12 @@ fi
 
 if [ "$STRING" == "voldown" ] ; then
   SPEAKER=$(amixer scontrols | head -n 1 | cut -d "'" -f 2)
-  amixer set $SPEAKER 5dB-
+  amixer set $SPEAKER 2dB-
 fi
 
 if [ "$STRING" == "volup" ] ; then
   SPEAKER=$(amixer scontrols | head -n 1 | cut -d "'" -f 2)
-  amixer set $SPEAKER 5dB+
+  amixer set $SPEAKER 2dB+
 fi   
 
 if [ "$QUERY_STRING" == "mute" ] ; then
@@ -325,4 +322,54 @@ fi
 
 if [ "$QUERY_STRING" == "continue" ] ; then
   kill -SIGCONT $(pidof madplay)
+fi
+
+if [ "$QUERY_STRING" == "radiostart" ] ; then
+  /etc/init.d/squeezelite stop
+  killall shairport-sync
+  /etc/init.d/radio start
+fi
+
+if [ "$QUERY_STRING" == "radiostop" ] ; then
+  /etc/init.d/squeezelite stop
+  /etc/init.d/radio stop
+  killall madplay wget
+  killall shairport-sync
+fi
+
+if [ "$QUERY_STRING" == "squeezestart" ] ; then
+  /etc/init.d/radio stop
+  killall madplay wget
+  killall shairport-sync
+  # FIXME: STARTING IT MANUALLY SINCE THE /etc/init.d SCRIPT DOES NOT WORK
+    cd /tmp
+    ls ./squeezelite-mips-ar71xx >/dev/null 2>&1 || wget http://squeezelite.googlecode.com/files/squeezelite-mips-ar71xx
+    chmod a+x ./squeezelite-mips-ar71xx
+    # FIXME: Strangely the following works ONLY with -d and ONLY without -z 
+    ./squeezelite-mips-ar71xx -n $(uci get system.@system[0].hostname) -d all=info -m xx:xx:xx:xx:xx:xx -s mysqueezebox.com 
+    cd 
+fi
+
+# There is not enough space to save the software on the device, but we can load it at runtime
+if [ "$QUERY_STRING" == "shairport" ] ; then
+  if [ ! -d /tmp/shairport-sync ] ; then
+    mkdir /tmp/shairport-sync
+    cd /tmp/shairport-sync
+    FILES=$(wget -q "http://irmagic.carina.uberspace.de/openwrt/binaries/shairport-sync/Packages" -O - | grep "Filename: ")
+    for FILE in $FILES ; do
+      wget "http://irmagic.carina.uberspace.de/openwrt/binaries/shairport-sync/$FILE"
+      tar zxpvf "$FILE"
+      tar zxpvf ./data.tar.gz
+      rm "$FILE"
+    done
+    cd usr/lib/
+    wget "http://irmagic.carina.uberspace.de/openwrt/binaries/shairport-sync/libssl.so.1.0.0"
+    wget "http://irmagic.carina.uberspace.de/openwrt/binaries/shairport-sync/libcrypto.so.1.0.0"
+    cd -
+  fi
+  killall wget
+  /etc/init.d/radio stop
+  cd /tmp/shairport-sync/
+  export LD_LIBRARY_PATH=./usr/lib/
+  ./usr/bin/shairport-sync -d -a $(uci get system.@system[0].hostname)
 fi

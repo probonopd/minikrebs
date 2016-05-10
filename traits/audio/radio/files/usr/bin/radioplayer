@@ -7,10 +7,23 @@ set -o pipefail
 # Initialize
 uci get radio.next || uci set radio.next=1
 
+#####
+
+# Wait until we have Internet
+while true; do
+  ping -c1 google.com && break
+  sleep 1
+done
+
+#####
+
 nr_to_name()
 {
   NUMBER_OF_STATIONS=$(uci show radio | grep -e "=station$" | wc -l)
-  if [ $1 -le $NUMBER_OF_STATIONS ] ; then
+  if [ $1 -lt 1 ] ; then
+    uci set radio.next=$NUMBER_OF_STATIONS # if 0 or negative then we set to the highest station
+    echo $(uci show radio | grep -e "=station$" | cut -d "." -f 2 | cut -d "=" -f 1 | head -n $1 | tail -n 1)
+  elif [ $1 -le $NUMBER_OF_STATIONS ] ; then
     echo $(uci show radio | grep -e "=station$" | cut -d "." -f 2 | cut -d "=" -f 1 | head -n $1 | tail -n 1)
   else
     uci set radio.next=1 # Reset
@@ -62,7 +75,7 @@ play()
     URL=$(wget "$URL"  -O - -q | grep mp3 | cut -d "=" -f 2)
   fi
 
-  wget -U "" "$URL" -O - | madplay --fade-in=3 -o wave:- - | aplay -Dplug:dmix
+  wget -U "" "$URL" -O - | madplay --fade-in=3 -o wave:- - 2>/tmp/madplay.out | aplay -Dplug:dmix
   # if [ $? -eq 0 ]; then
   #   SUCCEEDED=1
   # fi
@@ -75,14 +88,14 @@ overlay()
 
 id()
 {
-   wget -U "" "http://translate.google.com/translate_tts?tl=$1&q=$2" -O - | madplay --fade-in=0.1 -o wave:- - | aplay -Dplug:dmix &
+   /usr/bin/speak $1 $2
 }
 
 podcast()
 {
   URL=$(wget -U "" "$1" -O - | grep "enclosure url.*mp3" | head -n 1 | grep -o -e "enclosure url.*\"" | cut -d '"' -f 2 | sed -e 's|https://|http://|g')
   echo $URL
-  wget -U "" "$URL" -O - | madplay --fade-in=3 -o wave:- - | aplay -Dplug:dmix 
+  wget -U "" "$URL" -O - | madplay --fade-in=3 -o wave:- - 2>/tmp/madplay.out | aplay -Dplug:dmix 
   if [ $? -eq 0 ]; then
     # Only store lasturl value if listened all the way until the end
     # and thus got exitcode 0
@@ -99,11 +112,8 @@ dilandau()
 {
   SEARCH=$(echo $1 | sed -e 's| |%20|g')
   echo $SEARCH
-  wget -U "" "http://www.dilandau.eu/download-songs-mp3/$SEARCH/1.html" -O /tmp/_html
-  SNIP=$(grep -o -e "a\ download.*" /tmp/_html | head -n 1)
-  PART1=$(echo $SNIP | cut -d '"' -f 4)
-  PART2=$(echo $SNIP | cut -d '"' -f 6)
-  play $PART1$PART2
+  URL=$(wget "http://pleer.com/mobile/search?q=$SEARCH" -O - | grep download | grep -Eo "http.*?mp3" | head -n 1)
+  play "$URL"
 }
 
 playonce()
@@ -163,17 +173,13 @@ play_next()
 #  fi
 }
 
-# Wait until we have Internet
-while true; do
-  ping -c1 google.com && break
-  sleep 1
-done
-
 # Play startup sound
 play http://irmagic.carina.uberspace.de/radio/startup.mp3
+
+# Speak own IP address
+# speak "$(ifconfig  | grep "inet addr" | head -n 1 | cut -d ":" -f 2 | cut -d " " -f 1 | sed 's/\(.\)/\1 /g' | sed 's/\./,, punkt ,,/g')"
 
 # Infinite loop
 while true; do
   play_next
 done
-

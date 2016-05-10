@@ -3,23 +3,34 @@
 SPEAKER=$(amixer scontrols | head -n 1 | cut -d "'" -f 2)
 VOLUME=$(amixer get $SPEAKER | grep "\[" | head -n 1 | cut -d "[" -f 2 | cut -d "]" -f 1)
 
-# Reduce overall volume
-# amixer sset $SPEAKER '30%'
 # Pause any running madplay
 kill -SIGSTOP $(pidof madplay)
 sleep 1
 
-# Speak (atificially made louder; unfortunately this results in clipping = bad sound quality)
+# Increase overall volume
+amixer sset $SPEAKER 5dB+
+
 # FIXME: Can I send this to a different mixer that is not affected by the reduced overall volume?
-LANG=de
+LANG=$1
+shift
 TEXT=$(echo "$@" | sed -e 's|\ |+|g')
 echo $TEXT
-URL="http://translate.google.com/translate_tts?tl=$LANG&q=$TEXT"
+
+if [ "$LANG" == "de" ] ; then
+  VOICE="&VOICE=bits3-hsmm"
+fi
+
+if [ "$LANG" == "en" ] ; then
+  LANG="en_US"
+fi
+
+URL="http://mary.dfki.de:59125/process?INPUT_TYPE=TEXT&OUTPUT_TYPE=AUDIO&AUDIO=WAVE_FILE&LOCALE=$LANG$VOICE&INPUT_TEXT=$TEXT"
 echo $URL
-# wget -U "" "$URL" -O - | madplay --fade-in=0.1 --adjust-volume=+5 --replay-gain=radio -o wave:- - | aplay -Dplug:dmix 
-wget -U "" "$URL" -O - | madplay --replay-gain=radio -o wave:- - | aplay -Dplug:dmix 
+
+wget -U "" "$URL" -O - | aplay -Dplug:dmix
 
 # Set back to original volume
-# amixer sset $SPEAKER $VOLUME
+amixer sset $SPEAKER $VOLUME
+
 # Continue any running madplay
 kill -SIGCONT $(pidof madplay)

@@ -1,0 +1,1 @@
+PACKAGES="ser2net coreutils-stty kmod-usb-hid kmod-usb-acm avrdude"

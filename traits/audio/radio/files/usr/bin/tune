@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if [[ $# -eq 0 ]] ; then
+    echo "Usage: $0 up|down|channel"
+    exit 0
+fi
+
+case "$1" in
+    up) uci set radio.next=$(($(uci get radio.next)+1)) ;;
+    down) uci set radio.next=$(($(uci get radio.next)-1)) ;;
+    *) exit 1 ;;
+esac
+
+killall -9 wget
+killall -9 madplay

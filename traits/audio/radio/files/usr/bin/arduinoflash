@@ -1,6 +1,18 @@
 #!/bin/sh
 
-set -e 
+set -v
+
+killall arduinolisten
+
+export PATH=/tmp/usr/bin/:$PATH
+export LD_LIBRARY_PATH=/tmp/usr/lib/:$LD_LIBRARY_PATH
+
+# GPIO 29 is on "pin" R17-S (south end of resistor 17)
+# This is connected to the Arudino reset pin, hence we need to change it from "grounded" to "isolated"
+# so that the Arduino can start running
+echo 29 > /sys/class/gpio/export
+echo out > /sys/class/gpio/gpio29/direction
+echo 1 > /sys/class/gpio/gpio29/value # isolated
 
 if [ -z "$1" ] ; then
   URL=http://arduinocodeinone.googlecode.com/svn-history/r2/trunk/Arduino/Blink/applet/Blink.hex

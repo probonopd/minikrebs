@@ -14,13 +14,6 @@ cd -
 
 # fritzlisten &
 
-# GPIO 29 is on "pin" R17-S (south end of resistor 17)
-# This is connected to the Arudino reset pin, hence we need to change it from "grounded" to "isolated"
-# so that the Arduino can start running
-echo 29 > /sys/class/gpio/export
-echo out > /sys/class/gpio/gpio29/direction
-echo 1 > /sys/class/gpio/gpio29/value # isolated
-
 ## If we have an IP address via Ethernet, then we don't need WLAN
 #RESULT=$(ifconfig br-lan | grep "inet addr")
 #if [ "$RESULT" ] ; then
@@ -29,28 +22,5 @@ echo 1 > /sys/class/gpio/gpio29/value # isolated
 #  rmmod ath9k_common ath9k_hw ath
 #  rmmod mac80211 cfg80211 compat aes_generic crypto_algapi
 #fi
-
-# Launch Bonjour
-cd /tmp
-mkdir mDNSResponder
-cd mDNSResponder
-wget http://downloads.openwrt.org/attitude_adjustment/12.09/ar71xx/generic/packages/mdns-utils_214.3.2-4_ar71xx.ipk
-tar xzf *.ipk
-tar xzf data.tar.gz
-rm *ipk *gz debian-binary
-rm -rf ./usr/bin/dns-sd ./usr/bin/mDNSClient ./usr/bin/mDNSIdentify ./usr/bin/mDNSNetMonitor ./usr/bin/mDNSProxyResponder ./usr/lib
-HOSTNAME=$(uci get system.@system[0].hostname)
-cat > ./etc/mDNSResponder.conf <<EOxF
-$HOSTNAME SSH
-_ssh._tcp. local
-22
-
-$HOSTNAME Web Interface
-_http._tcp local
-80
-path=/cgi-bin/radio
-EOxF
-./usr/bin/mDNSResponder  -f ./etc/mDNSResponder.conf &
-cd -
 
 exit 0

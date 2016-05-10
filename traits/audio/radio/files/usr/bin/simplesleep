@@ -1,0 +1,14 @@
+#!/bin/sh
+
+MINS=90
+SECS=$(($MINS*60))
+# SECS=60 ### For testing
+
+NUM=$( ps | grep "sleep $SECS" | wc -l )
+echo $NUM
+
+# Only if we are not already in the sleep state, we start to sleep
+if [ $NUM == 1 ]; then
+  # Sleep in the subshell
+  ( sleep $SECS && /etc/init.d/radio stop ) &
+fi

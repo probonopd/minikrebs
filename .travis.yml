@@ -1,0 +1,24 @@
+sudo: false
+
+# TODO: Restructure this so that multiple traits and platforms can be built during one run
+# because ImageBuilders can be quite large (rt305x is 1.5 GB) this will increase efficiency
+
+env:
+  global:
+    - TRAIT=radio
+#    - TRAIT=captive
+#    - TRAIT=netem
+  matrix:
+#    - PLATFORM=DIR505A1 IMAGEBUILDER_URL="https://downloads.openwrt.org/chaos_calmer/15.05/ar71xx/generic/OpenWrt-ImageBuilder-15.05-ar71xx-generic.Linux-x86_64.tar.bz2"
+    - PLATFORM=TLWR703 IMAGEBUILDER_URL="https://downloads.openwrt.org/chaos_calmer/15.05/ar71xx/generic/OpenWrt-ImageBuilder-15.05-ar71xx-generic.Linux-x86_64.tar.bz2"
+#    - PLATFORM=TLWR703 IMAGEBUILDER_URL="https://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/OpenWrt-ImageBuilder-ar71xx-generic.Linux-x86_64.tar.bz2"
+#    - PLATFORM=TLWR710 IMAGEBUILDER_URL="https://downloads.openwrt.org/chaos_calmer/15.05/ar71xx/generic/OpenWrt-ImageBuilder-15.05-ar71xx-generic.Linux-x86_64.tar.bz2"
+#    - PLATFORM=A5-V11 IMAGEBUILDER_URL="https://downloads.openwrt.org/chaos_calmer/15.05/ramips/rt305x/OpenWrt-ImageBuilder-15.05-ramips-rt305x.Linux-x86_64.tar.bz2"
+
+script:
+  - git clone https://github.com/probonopd/minikrebs.git
+  - cd minikrebs/
+  - ./prepare $TRAIT
+  - ./builder/init
+  - ls -lh ./builder/bin/*/*-squashfs-*.bin
+  - find ./builder/bin -type f -name "*squash*bin" -exec bash -e bintray.sh {} \; 

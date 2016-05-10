@@ -1,0 +1,6 @@
+core
+minimal/no-ppp
+minimal/no-ipv6
+network/client-mode
+network/avahi
+network/captive

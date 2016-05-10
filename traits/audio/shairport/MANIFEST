@@ -1,0 +1,1 @@
+PACKAGES="alsa-utils shairport -6relayd -ip6tables -opkg -kmod-gpio-button-hotplug -kmod-leds-gpio -kmod-ledtrig-default-on -kmod-ledtrig-netdev -kmod-ledtrig-timer -swconfig -uboot-envtools"

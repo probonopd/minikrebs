@@ -1,0 +1,3 @@
+Provides access to the serial port over the network. "Serial port" can mean a USB-to-serial converter.
+Contains an /root/communicate-arduino.py script that can "talk" to e.g., an Arduino.
+Use this as the basis for talking to your own gadgets over the serial line.

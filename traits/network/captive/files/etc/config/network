@@ -1,0 +1,23 @@
+
+config interface 'loopback'
+	option ifname 'lo'
+	option proto 'static'
+	option ipaddr '127.0.0.1'
+	option netmask '255.0.0.0'
+
+config interface 'lan0'
+        option ifname 'eth0'
+        option proto 'dhcp'
+
+config interface 'lan1'
+        option ifname 'eth1'
+        option proto 'static'
+        option ipaddr '192.168.0.14'
+        option netmask '255.255.255.0'
+        option gateway '192.168.0.1'
+
+config interface 'hotspot'
+        option ifname 'wlan0'
+	option proto 'static'
+	option ipaddr '192.168.5.1'
+	option netmask '255.255.255.0'

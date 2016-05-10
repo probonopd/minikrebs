@@ -1,1 +1,1 @@
-PACKAGES="-kmod-ipt-nat -kmod-ipt-nathelper -kmod-ipt-conntrack -iptables"
+PACKAGES="-kmod-ipt-nat -kmod-ipt-nathelper -kmod-ipt-conntrack -iptables -kmod-nf-ipt6 -kmod-nf-nathelper-extra -kmod-nf-nat -kmod-nf-conntrack -kmod-nf-nat6 -kmod-nf-ipt -kmod-nf-nathelper -kmod-nf-conntrack6 -kmod-nf-conntrack-netlink"

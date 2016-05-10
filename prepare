@@ -7,6 +7,12 @@ set -euf
 IMAGEBUILDER_URL=${IMAGEBUILDER_URL:-https://downloads.openwrt.org/chaos_calmer/15.05/x86/64/OpenWrt-ImageBuilder-15.05-x86-64.Linux-x86_64.tar.bz2}
 archive=$(basename $IMAGEBUILDER_URL)
 
+# $IMAGEBUILDER_URL can be an environment variable set outside this script
+if [ -z "$IMAGEBUILDER_URL" ] ; then
+  IMAGEBUILDER_URL="https://downloads.openwrt.org/chaos_calmer/15.05/ar71xx/generic/OpenWrt-ImageBuilder-15.05-ar71xx-generic.Linux-x86_64.tar.bz2"
+  # IMAGEBUILDER_URL="https://downloads.openwrt.org/snapshots/trunk/ramips/generic/OpenWrt-ImageBuilder-ramips-rt305x.Linux-x86_64.tar.bz2"
+  # Caution: Snapshots are unstable
+fi
 
 cd $(dirname $(readlink -f $0))
 git submodule update --init
@@ -17,11 +23,10 @@ if [  -z "${1:-}"  ];then
     exit 1
 fi
 PROFILE=$1
-if [ ! -e builder/Makefile ]; then
-    wget $IMAGEBUILDER_URL -O- | tar xj ${archive/.tar.bz2}
-    mv ${archive/.tar.bz2} builder
-    ##wget -O- $IMAGEBUILDER_URL | tar xj OpenWrt-ImageBuilder-ar71xx_generic-for-linux-i486
-    ##mv -f OpenWrt-ImageBuilder-ar71xx_generic-for-linux-i486 builder
+if [ ! -e builder/init ]; then
+    wget --trust-server-names -c "$IMAGEBUILDER_URL" 
+    tar xf $(basename "$IMAGEBUILDER_URL")
+    mv OpenWrt-*-x86_64 builder
     echo "Builder successfully downloaded"
 else
     echo "Builder already installed, skipping download"

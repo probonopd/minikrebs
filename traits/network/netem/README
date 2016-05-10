@@ -1,0 +1,3 @@
+Simulate bad network on wlan0.
+A connection named wlan0 needs to be configured manually and needs to show up in ifup in order for this to work.
+The bad network simulation can be launched with /etc/init.d/netem start if there is a wlan0 network.

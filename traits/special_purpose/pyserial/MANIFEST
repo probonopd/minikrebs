@@ -1,0 +1,1 @@
+PACKAGES="luci-mod-admin-full uhttpd libiwinfo-lua luci-theme-bootstrap ser2net alsa-utils madplay coreutils-stty kmod-usb-hid kmod-input-evdev triggerhappy kmod-usb-acm python pyserial nano"

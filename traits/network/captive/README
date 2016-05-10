@@ -1,0 +1,16 @@
+Captive portal
+
+NOTE: The IP address of the Ethernet interface is hardcoded to 192.168.0.14 in /etc/configuration/network.
+You need to change it if you would like to use another address.
+
+Run
+ndsctl status
+to see the configuration and the authenticated clients.
+
+Run
+ndsctl deauth 192.168.0.12
+to make the user with IP 192.168.0.12 authenticate again (can also use MAC address)
+
+Start 
+nodogsplash -f -d 7
+to see verbose output

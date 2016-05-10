@@ -1,5 +1,5 @@
 #!/bin/sh
-
+/etc/init.d/radio enabled || exit 0
 case "$PRODUCT" in
   d8c*) // Only do this if the USB device in question is a C-Media USB audio device
   case "$ACTION" in

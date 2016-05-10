@@ -1,0 +1,29 @@
+#!/bin/sh /etc/rc.common
+# Simulate bad WLAN connection
+ 
+START=10
+STOP=15
+ 
+start() {        
+        echo "Start simulating bad network on wlan0"
+	tc qdisc add dev wlan0 root netem delay 500ms 20ms loss 10%
+	# for randomly dropping 10% of incoming packets
+	iptables -A INPUT -m statistic --mode random --probability 0.1 -j DROP
+	# and for dropping 10% of outgoing packets
+	iptables -A OUTPUT -m statistic --mode random --probability 0.1 -j DROP
+}
+
+stop() {
+        echo "Stop simulating bad network on wlan0"
+	tc qdisc del dev wlan0 root netem delay 500ms 20ms loss 10%
+	# for the incoming packets
+	iptables -D INPUT -m statistic --mode random --probability 0.1 -j DROP
+	# and for the outgoing packets
+	iptables -D OUTPUT -m statistic --mode random --probability 0.1 -j DROP
+}
+
+restart() {
+	stop
+	sleep 1
+	start
+}

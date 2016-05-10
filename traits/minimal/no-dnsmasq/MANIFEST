@@ -1,1 +1,1 @@
-PACKAGES="-dnsmasq -radvd"
+PACKAGES="-dnsmasq -radvd -odhcpd"

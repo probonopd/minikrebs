@@ -11,9 +11,9 @@ echo
 rm -r bin/ || echo "no bindir, skipping removal"
 if [ -e ./custom_make ];then
     echo "Starting Custom Make"
-    sh ./custom_make 2>/dev/null | while read line; do
-        printf "."
-    done
+    sh ./custom_make # 2>/dev/null | while read line; do
+        # printf "."
+    # done
 else
     echo "No Custom Make Script exists, bailing out!"
     exit 1
@@ -21,20 +21,22 @@ fi
 
 echo
 
-FILES=$(find $PWD/bin/ -type f | grep -v 'sums$' )
+FACTORY=$(find bin/ | grep -e "squashfs-factory.bin$" | head -n 1)
+SYSUPGRADE=$(find bin/ | grep -e "squashfs-sysupgrade.bin$" | head -n 1)
 
-if [ "$FILES" != "" ];
+if [ "$FACTORY" != "" ];
 then
     cat << EOF
 finished building
 You can use the following images:
-$FILES
+    Factory       : $PWD/$FACTORY
+    System Upgrade: $PWD/$SYSUPGRADE
 EOF
 else
     cat << EOF
-It seems like the factory image has not been created, it is most
-likely that the image would be too big and does not fit into the tiny FLASH.
+It seems like the factory image has not been created, it could mean
+that the image would be too big and does not fit into the tiny FLASH.
 
-Try removing modules from \`custom_make\` and retry building.
+Observe the output above, fix, and retry building.
 EOF
 fi

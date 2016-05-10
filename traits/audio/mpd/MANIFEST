@@ -1,0 +1,1 @@
+PACKAGES="alsa-utils mpd-mini -kmod-gpio-button-hotplug -kmod-leds-gpio -kmod-ledtrig-default-on -kmod-ledtrig-netdev -kmod-ledtrig-timer -swconfig -uboot-envtools"
