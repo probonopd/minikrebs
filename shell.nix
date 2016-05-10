@@ -14,4 +14,7 @@ pkgs.stdenv.mkDerivation rec {
     which
     qemu
   ];
+  shellHook = ''
+    HISTFILE=$PWD/.histfile
+  '';
 }
