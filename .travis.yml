@@ -19,4 +19,4 @@ script:
   - test ! -e "$PREBUILD" || ( cp "$PREBUILD" builder/ && (cd builder/ && sh $(basename $PREBUILD)) && echo "prebuild script successful" )
   - ./builder/init
   - ls -lh ./builder/bin/*/*squashfs*
-  - find ./builder/bin -type f -name "*squashfs*" -exec bash -e bintray.sh {} \;
+    find ./builder/bin -type f -regex ".*squashfs.*\.\(bin\|img\)" -regextype posix-egrep -exec bash -e bintray.sh {} \;
