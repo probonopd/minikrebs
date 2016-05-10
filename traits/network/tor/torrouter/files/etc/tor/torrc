@@ -1,8 +1,10 @@
 RunAsDaemon 1
 # TODO: switch to warn
 Log notice syslog
-# TODO: use persistent storage
+# TODO: this uses persistent storage
 DataDirectory /usr/lib/tor
+AvoidDiskWrites 1
+
 User tor
 PidFile /var/run/tor.pid
 
@@ -16,4 +18,3 @@ DNSPort 9053
 KeepalivePeriod 60
 CircuitBuildTimeout 20
 NewCircuitPeriod 30
-AvoidDiskWrites 1

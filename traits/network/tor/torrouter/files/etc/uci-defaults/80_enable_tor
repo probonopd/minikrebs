@@ -1,6 +1,8 @@
 #! /bin/sh
 
+# prepare persistence
 mkdir -p /usr/lib/tor
+chown tor /usr/lib/tor
 
 torip=$(uci get network.tor.ipaddr)
 
