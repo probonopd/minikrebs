@@ -46,7 +46,11 @@ fi
 
 CURL="curl -u${BINTRAY_USER}:${BINTRAY_API_KEY} -H Content-Type:application/json -H Accept:application/json"
 
-VERSION=$(cat ./builder/build_dir/target-*/root-*/etc/banner | grep "(" | cut -d "(" -f 2 | cut -d ")" -f 1 | sed -e 's/, /./g')
+OWRT_VERSION=$(sed -n -e "s/BLEEDING EDGE/$(date +%y.%m)-dev/i" -e 's/, /./' -e 's/.*(\(.*\)).*/\1/p'  ./builder/build_dir/target-*/root-*/etc/banner)
+#OWRT_VERSION=$(sed -n  -e 's/.*(.*, \(.*\)).*/\1/p' ./builder/build_dir/target-*/root-*/etc/banner)
+#MINIKREBS_VERSION=$(git log -1 --format=format:%ad.%h --date=short)
+MINIKREBS_VERSION=$(git log -1 --format=format:%h)
+VERSION=${MINIKREBS_VERSION}-openwrt@${OWRT_VERSION}
 # VERSION=$(git rev-list --count HEAD).$(git log -n 1 | head -n 1 | sed -e 's/^commit //' | head -c 8)
 
 if [ "$VERSION" == "" ] ; then
@@ -69,13 +73,18 @@ echo "Creating package ${PCK_NAME}..."
     \"vcs_url\": [\"${VCS_URL}\"],
     \"issue_tracker_url\": [\"${ISSUE_TRACKER_URL}\"],
     \"licenses\": [\"MIT\"],
-    \"labels\": [\"AppImage\", \"AppImageKit\"]
+    \"labels\": [\"openwrt\", \"firmware\"]
     }"
-${CURL} -X POST -d "${data}" ${API}/packages/${BINTRAY_SUBJECT}/${BINTRAY_REPO}
+${CURL} -X POST -d "${data}" "${API}/packages/${BINTRAY_SUBJECT}/${BINTRAY_REPO}"
 
 echo ""
 echo "Uploading and publishing ${FILE}..."
-${CURL} -T ${FILE} "${API}/content/${BINTRAY_SUBJECT}/${BINTRAY_REPO}/${PCK_NAME}/${VERSION}/$(basename ${FILE})?publish=1&override=1"
+ret="$(${CURL} -T ${FILE} "${API}/content/${BINTRAY_SUBJECT}/${BINTRAY_REPO}/${PCK_NAME}/${VERSION}/$PCK_NAME-$MINIKREBS_VERSION-$(basename ${FILE})?publish=1")"
+if echo "$ret" | egrep -qi "(failed|unable)";then
+  echo "Something went wrong while publishing file to bintray:"
+  echo "$ret"
+  exit 1
+fi
 
 if [ $(env | grep TRAVIS_JOB_ID ) ] ; then
 echo ""
@@ -87,6 +96,5 @@ BUILD_LOG="https://api.travis-ci.org/jobs/${TRAVIS_JOB_ID}/log.txt?deansi=true"
     "content": "'${BUILD_LOG}'"
   }
 }'
-${CURL} -X POST -d "${data}" ${API}/packages/${BINTRAY_SUBJECT}/${BINTRAY_REPO}/${PCK_NAME}/versions/${VERSION}/release_notes
+${CURL} -X POST -d "${data}" "${API}/packages/${BINTRAY_SUBJECT}/${BINTRAY_REPO}/${PCK_NAME}/versions/${VERSION}/release_notes"
 fi
-

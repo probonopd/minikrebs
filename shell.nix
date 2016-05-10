@@ -6,6 +6,7 @@ pkgs.stdenv.mkDerivation rec {
   buildInputs = with pkgs; [
     wget
     subversion
+    gnused
     gcc
     git
     gawk
