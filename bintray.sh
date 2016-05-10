@@ -3,7 +3,7 @@
 # Push firmware images and related metadata to Bintray
 # https://bintray.com/docs/api/
 
-trap 'exit 1' ERR
+set -e
 
 API=https://api.bintray.com
 
@@ -32,14 +32,14 @@ which curl || exit 1
 which grep || exit 1
 
 if [ ! $(env | grep BINTRAY_API_KEY ) ] ; then
-  echo "Environment variable \$BINTRAY_API_KEY missing"
+  echo "!! Environment variable \$BINTRAY_API_KEY missing"
   exit 1
 fi
 
 # Do not upload artefacts generated as part of a pull request
 if [ $(env | grep TRAVIS_PULL_REQUEST ) ] ; then
   if [ "$TRAVIS_PULL_REQUEST" != "false" ] ; then
-    echo "Not uploading since this is a pull request"
+    echo "* Not uploading since this is a pull request"
     exit 0
   fi
 fi
@@ -53,18 +53,9 @@ MINIKREBS_VERSION=$(git log -1 --format=format:%h)
 VERSION=${MINIKREBS_VERSION}-openwrt@${OWRT_VERSION}
 # VERSION=$(git rev-list --count HEAD).$(git log -n 1 | head -n 1 | sed -e 's/^commit //' | head -c 8)
 
-if [ "$VERSION" == "" ] ; then
-  echo "* VERSION missing, exiting"
-  exit 1
-else
-  echo "* VERSION $VERSION"
-fi
+echo "* VERSION $VERSION"
 
-# exit 0
-##########
-
-echo ""
-echo "Creating package ${PCK_NAME}..."
+echo "* Creating package ${PCK_NAME}..."
     data="{
     \"name\": \"${PCK_NAME}\",
     \"desc\": ${DESCRIPTION},
@@ -78,17 +69,20 @@ echo "Creating package ${PCK_NAME}..."
 ${CURL} -X POST -d "${data}" "${API}/packages/${BINTRAY_SUBJECT}/${BINTRAY_REPO}"
 
 echo ""
-echo "Uploading and publishing ${FILE}..."
+echo "* Uploading and publishing ${FILE}..."
 ret="$(${CURL} -T ${FILE} "${API}/content/${BINTRAY_SUBJECT}/${BINTRAY_REPO}/${PCK_NAME}/${VERSION}/$PCK_NAME-$MINIKREBS_VERSION-$(basename ${FILE})?publish=1")"
 if echo "$ret" | egrep -qi "(failed|unable)";then
-  echo "Something went wrong while publishing file to bintray:"
+  echo "!! Something went wrong while publishing file to bintray:"
   echo "$ret"
   exit 1
+else
+  echo "* Upload successful:"
+  echo "$ret"
 fi
 
 if [ $(env | grep TRAVIS_JOB_ID ) ] ; then
 echo ""
-echo "Adding Travis CI log to release notes..."
+echo "* Adding Travis CI log to release notes..."
 BUILD_LOG="https://api.travis-ci.org/jobs/${TRAVIS_JOB_ID}/log.txt?deansi=true"
     data='{
   "bintray": {
