@@ -5,16 +5,18 @@ sudo: false
 
 env:
   global:
-    - TRAIT=tor-router-dual-eth
 #    - TRAIT=tor-router-glinet
   matrix:
-    - PLATFORM='' IMAGEBUILDER_URL='https://downloads.openwrt.org/chaos_calmer/15.05/x86/64/OpenWrt-ImageBuilder-15.05-x86-64.Linux-x86_64.tar.bz2'
-#    - PLATFORM=TLWR703 IMAGEBUILDER_URL="https://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/OpenWrt-ImageBuilder-ar71xx-generic.Linux-x86_64.tar.bz2"
+    - TRAIT=tor-router-dual-eth PLATFORM='' IMAGEBUILDER_URL='https://downloads.openwrt.org/chaos_calmer/15.05/x86/64/OpenWrt-ImageBuilder-15.05-x86-64.Linux-x86_64.tar.bz2'
+    - TRAIT=tor-router-glinet PLATFORM=GLINET IMAGEBUILDER_URL="https://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/OpenWrt-ImageBuilder-ar71xx-generic.Linux-x86_64.tar.bz2"
+    - PREBUILD=lib/prebuild/tlwr-16m.sh TRAIT=tor-router PLATFORM=TLWR703 IMAGEBUILDER_URL="https://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/OpenWrt-ImageBuilder-ar71xx-generic.Linux-x86_64.tar.bz2"
 
 script:
   - git clone https://github.com/krebscode/minikrebs.git
   - cd minikrebs/
   - ./prepare $TRAIT
+  # TODO: generalize PREBUILD for use without travis
+  - test ! -e "$PREBUILD" || ( cp "$PREBUILD" builder/ && (cd builder/ && sh $(basename $PREBUILD)) && echo "prebuild script successful" )
   - ./builder/init
   - ls -lh ./builder/bin/*/*squashfs*
   - find ./builder/bin -type f -name "*squashfs*" -exec bash -e bintray.sh {} \;
