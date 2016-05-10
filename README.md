@@ -2,7 +2,7 @@
 
 This is a customized OpenWrt firmware image generator based on http://shackspace.de/wiki/doku.php?id=project:minikrebs
 
-You can download some of the generated firmware images from this [Bintray repository](https://bintray.com/krebscode/OpenWrt).
+You can download some of the generated firmware images from this [Bintray repository](https://bintray.com/krebscode/minikrebs).
 
 __CAUTION:__ These images are entirely __untested__ and you are running them on __your own risk__. You might brick your device, so if you do not know how to debrick your device e.g., using a serial console, don't use these images.
 
