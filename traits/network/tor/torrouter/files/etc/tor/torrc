@@ -9,7 +9,7 @@ PidFile /var/run/tor.pid
 VirtualAddrNetwork 10.192.0.0/10
 AutomapHostsOnResolve 1
 TransPort 9040
-DNSPort 9056
+DNSPort 9053
 # TODO: SocksPort?
 
 # TODO: tuning of timeouts
