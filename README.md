@@ -6,6 +6,7 @@ You can download some of the generated firmware images from this [Bintray reposi
 
 __CAUTION:__ These images are entirely __untested__ and you are running them on __your own risk__. You might brick your device, so if you do not know how to debrick your device e.g., using a serial console, don't use these images.
 
+
 ## Profiles
 
 ### Tor Router
@@ -123,3 +124,42 @@ config interface 'lan0'
         option ifname 'eth0.1'
         option proto 'dhcp'
 ```
+
+# Overlay
+## How it works
+Overlaying the rootfs with an usb stick provides your mini computer with a lot
+of free disk space. Minikrebs provides means to prepare an overlay and
+automatically install packages on first boot with the following traits:
+
+  * *usb/root_overlay/*
+  * *usb/root_overlay/install_overlay_packages/*
+
+Include these traits in your profile and an overlay filesystem will be used on
+bootup. The source code is very short so be sure to read it :)
+
+Other traits then can use `OVERLAY_PACKAGES` in their manifest to
+install packages which normally would be too big.
+
+
+## Overlay Init
+For initialization the following steps must be performed:
+
+```
+cfdisk /dev/sdx # create a single partition
+mkfs.vfat /dev/sdx1 # prepare a file system which is supported for the overlay
+./prepare profile-with-overlay
+# builder/overlay_packages will be filled by the traits by utilizing 
+mkdir -p builder/mnt/overlay
+mount /dev/sdx1 builder/mnt/overlay
+./builder/init_overlay # copies packages from overlay_packages, also copies
+                       # files from ./builder/overlay to ./builder/mnt/overlay
+# builder/mnt/overlay will be unmounted after successful init
+./builder/init
+```
+
+## Caveats for Overlaying
+Please be aware that the overlay initialization is pretty much entirely
+untested - **it worked 3 years ago for me, nothing more, nothing less**.
+
+My focus shifted a bit from 4mb flash routers to routers with enough disk 
+space (16m).
