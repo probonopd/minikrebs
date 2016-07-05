@@ -14,7 +14,7 @@ EOF
 
 [ -z "${1:-}"  ] && usage && exit 1
 
-HERE="$(dirname $(readlink -f $0))"
+HERE="$(dirname "$(readlink -f "$0")")"
 PROFILE_DIR="${HERE}/profiles"
 TRAIT_DIR="${TRAIT_DIR:-${HERE}/traits}"
 BUILD_DIR="${HERE}/builder/"
@@ -25,34 +25,34 @@ OVERLAY_PKG_FILE="${BUILD_DIR}/overlay_packages"
 APPEND_FILES="${HERE}/lib/append_files"
 
 indent() {
-    while read line;do
-    yes ' ' | head -${1:-4} | tr -d '\n'
-    echo $line
+    while read -r line;do
+    yes ' ' | head -"${1:-4}" | tr -d '\n'
+    echo "$line"
     done
 }
 
 handle_append(){
-    cat ${APPEND_FILES}| while read i;do
+    (while read -r i ;do
         [ -e "$1/files/$i" ]  && cat "$1/files/$i" >> "$BUILD_DIR/customfiles/$i"
-    done
+    done) < "${APPEND_FILES}"
 }
 handle_trait_dir(){
-    if [ "$(readlink -f $TRAIT_DIR )" = "$1" ];then
+    if [ "$(readlink -f "$TRAIT_DIR" )" = "$1" ];then
         return 0
     else
         # higher level traits supersede more general definitions
         cd "$1"
         #echo "in $CUR" >&2
 
-        handle_trait_dir $(readlink -f ..) ||:
+        handle_trait_dir "$(readlink -f ..)" ||:
         if [ -e "$1/files" ] ;then
             rsync -rl --exclude-from="$APPEND_FILES" "$1/files/"* "$BUILD_DIR/customfiles"
             handle_append "$1"
         fi
         if [ -e "$1/MANIFEST" ];then
             . "$1/MANIFEST"
-            printf '%s' "${PACKAGES:-} " >> $PKG_FILE
-            printf '%s' "${OVERLAY_PACKAGES:-} " >> $OVERLAY_PKG_FILE
+            printf '%s' "${PACKAGES:-} " >> "$PKG_FILE"
+            printf '%s' "${OVERLAY_PACKAGES:-} " >> "$OVERLAY_PKG_FILE"
         fi
     fi
 
@@ -62,21 +62,21 @@ build_custom_make(){
     #hack to avoid newlines in build file
     PLATFORM="$1"
 
-    echo "make image PROFILE='$PLATFORM' PACKAGES='`cat $PKG_FILE`' FILES=customfiles/" > \
+    echo "make image PROFILE='$PLATFORM' PACKAGES='$(cat "$PKG_FILE")' FILES=customfiles/" > \
         "$BUILD_DIR/custom_make"
-    chmod +x $BUILD_DIR/custom_make
+    chmod +x "$BUILD_DIR/custom_make"
 }
 main (){
     rm -rf "$BUILD_DIR/customfiles"
     rm -f "$OVERLAY_PKG_FILE" "$PKG_FILE"
     mkdir -p "$BUILD_DIR/customfiles"
     echo "Doc from the Profile:" >&2
-    grep '^\s*#' "$PROFILE" | indent >&2
-    ALL_PACKAGES=`grep -v '^\s*#' "$PROFILE" | while read trait;do
+    grep '^\s*#' "$PROFILE" | indent 2 >&2
+    grep -v '^\s*#' "$PROFILE" | while read -r trait;do
         echo "Handling $TRAIT_DIR/$trait" >&2
-        handle_trait_dir "$(readlink -f $TRAIT_DIR/$trait)" ||:
-    done`
+        handle_trait_dir "$(readlink -f "$TRAIT_DIR/$trait")" ||:
+    done
     build_custom_make "$PLATFORM"
 }
 
-main $@
+main "$@"
