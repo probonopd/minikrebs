@@ -1,0 +1,18 @@
+#!/bin/sh
+set -euf
+device=radio0
+
+
+uci batch <<EOF
+# lower txpower of radio0
+set wireless.radio0.txpower='7'
+# enable the network interface
+set wireless.${device}.disabled=0
+set wireless.@wifi-iface[0].ssid="NZ@McD1"
+set wireless.@wifi-iface[0].network=tor
+set wireless.@wifi-iface[0].macaddr="4e:53:50:4f:4f:46"
+set wireless.@wifi-iface[0].isolate=1
+set wireless.@wifi-iface[0].encryption=none
+EOF
+uci commit wireless
+wifi reload

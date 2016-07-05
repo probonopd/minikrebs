@@ -1,0 +1,10 @@
+#!/bin/sh
+set -euf
+net=tor
+
+
+uci batch <<EOF
+set wshaper.settings.network=$net
+set wshaper.settings.downlink=128
+set wshaper.settings.uplink=128
+EOF

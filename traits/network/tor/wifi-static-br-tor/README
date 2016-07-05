@@ -1,2 +1,2 @@
-Configures the second ethernet interface to become the new TOR routed network.
+Configures the wifi interface to become the new TOR routed network.
 All traffic arriving at this network will be routed through tor

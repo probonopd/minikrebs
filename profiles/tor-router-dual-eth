@@ -10,6 +10,10 @@
 #
 # Convert to Virtualbox image:
 #   VboxManage convertfromraw *-combined-squashfs.img openwrt-torrouter.vdi --format VDI
+#
+# Convert to qemu QCOW2:
+#   qemu-img convert openwrt-15.05-x86-64-combined-ext4.img -O qcow2 openwrt-ext4.qcow2
+#
 core
 core/firstrun
 minimal/no-ppp
