@@ -1,15 +1,16 @@
 #! /bin/sh
-
+set -euf
 # prepare persistence
 mkdir -p /usr/lib/tor
 chown tor /usr/lib/tor
 
-torip=$(uci get network.tor.ipaddr)
+. /lib/functions/network.sh
+network_get_ipaddr ip tor
+
+cat >>/etc/tor/torrc <<EOF
+TransListenAddress $ip
+DNSListenAddress $ip
+EOF
 
 /etc/init.d/tor enable
 /etc/init.d/tor start
-
-cat >>/etc/tor/torrc <<EOF
-TransListenAddress $torip
-DNSListenAddress $torip
-EOF
