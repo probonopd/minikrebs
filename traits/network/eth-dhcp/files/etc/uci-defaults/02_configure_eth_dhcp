@@ -1,6 +1,9 @@
 #!/bin/sh
 set -euf
+. /usr/lib/firstrun.sh
 itf=eth0
+
+clear_interface_config $itf
 
 uci batch <<EOF
 delete network.wan
