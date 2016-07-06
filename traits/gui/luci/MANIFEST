@@ -1,2 +1,1 @@
 PACKAGES="luci"
-REQUIRES="core/firstrun"

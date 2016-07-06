@@ -1,0 +1,3 @@
+Trait configures firewall to allow access from WAN Port
+This is interesting for internal network devices and bridges where `wan`
+really is an internal address

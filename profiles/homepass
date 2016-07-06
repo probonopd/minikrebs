@@ -11,8 +11,14 @@ minimal/no-ppp
 network/eth-dhcp
 # configure wifi access point
 network/tor/wifi-homepass
+
 # configure br-tor
 network/tor/wifi-static-br-tor
-
 # configure nat-ing for br-tor, enable tor daemon
 network/tor/torrouter
+
+# enable remote management
+network/firewall/wan-open
+# enable luci for easier management
+gui/luci
+gui/luci/uhttpd
