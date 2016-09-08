@@ -9,7 +9,7 @@ env:
   matrix:
     - PCK_NAME=tor-router-x64 TRAIT=tor-router-dual-eth PLATFORM="" IMAGEBUILDER_URL="https://downloads.openwrt.org/chaos_calmer/15.05/x86/64/OpenWrt-ImageBuilder-15.05-x86-64.Linux-x86_64.tar.bz2"
     - PCK_NAME=connecTOR-TRUNK TRAIT=tor-router-glinet PLATFORM=GLINET IMAGEBUILDER_URL="https://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/OpenWrt-ImageBuilder-ar71xx-generic.Linux-x86_64.tar.bz2"
-    - PCK_NAME=connecTOR-CC TRAIT=tor-router-glinet PLATFORM=GLINET IMAGEBUILDER_URL="https://downloads.openwrt.org/snapshots/trunk/ar71xx/generic/OpenWrt-ImageBuilder-ar71xx-generic.Linux-x86_64.tar.bz2"
+    - PCK_NAME=connecTOR-CC TRAIT=tor-router-glinet PLATFORM=GLINET IMAGEBUILDER_URL="https://downloads.openwrt.org/chaos_calmer/15.05/ar71xx/generic/OpenWrt-ImageBuilder-15.05-ar71xx-generic.Linux-x86_64.tar.bz2"
     # trunk tor router, disabled until # https://dev.openwrt.org/ticket/22040 is fixed
     # - TRAIT=tor-router-dual-eth PLATFORM="Generic" IMAGEBUILDER_URL="https://downloads.openwrt.org/snapshots/trunk/x86/64/OpenWrt-ImageBuilder-x86-64.Linux-x86_64.tar.bz2"
 
