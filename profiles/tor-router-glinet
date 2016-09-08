@@ -15,3 +15,6 @@ network/tor/secondary-eth-static-tor
 # configure nat-ing for br-tor, enable tor daemon
 network/tor/wifi-connecTOR-open
 network/tor/torrouter
+
+gui/luci
+gui/luci/uhttpd

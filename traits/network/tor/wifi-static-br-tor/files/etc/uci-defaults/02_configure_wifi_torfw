@@ -60,6 +60,13 @@ set firewall.@rule[-1].proto='tcp'
 set firewall.@rule[-1].dest_port='22'
 set firewall.@rule[-1].target='ACCEPT'
 
+add firewall rule
+set firewall.@rule[-1].name='Allow-Tor-HTTP'
+set firewall.@rule[-1].src='tor'
+set firewall.@rule[-1].proto='tcp'
+set firewall.@rule[-1].dest_port='80'
+set firewall.@rule[-1].target='ACCEPT'
+
 EOF
 
 uci commit network
