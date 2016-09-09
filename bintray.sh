@@ -7,7 +7,7 @@ set -e
 
 API=https://api.bintray.com
 
-if [ -z "TRAIT" ]; then
+if [ -z "$TRAIT" ]; then
     echo "Need to set TRAIT"
     exit 1
 fi
