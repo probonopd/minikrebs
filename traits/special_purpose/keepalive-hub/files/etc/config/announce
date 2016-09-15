@@ -1,0 +1,5 @@
+config announce irc
+	option server 'irc.freenode.net'
+	option port '6667'
+	option channel '#elchos'
+
