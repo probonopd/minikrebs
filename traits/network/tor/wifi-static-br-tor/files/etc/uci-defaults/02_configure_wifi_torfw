@@ -1,0 +1,76 @@
+#!/bin/sh
+set -euf
+itf=wlan0
+
+
+uci batch <<EOF
+# add a new network itf: br-tor
+set network.tor=interface
+set network.tor.ifname=$itf
+set network.tor.proto='static'
+set network.tor.ipaddr='192.168.2.1'
+set network.tor.netmask='255.255.255.0'
+set network.tor.type='bridge'
+
+# Enable DHCP for interface
+set dhcp.tor=dhcp
+
+set dhcp.tor.start='30'
+set dhcp.tor.limit='250'
+set dhcp.tor.leasetime='12h'
+set dhcp.tor.interface='tor'
+
+# TODO: split this config up in another trait?
+# Configure firewall and zone
+# tor should not be forwarded, only provide a couple of ports
+# we consider this network hostile
+set firewall.tor=zone
+set firewall.tor.name='tor'
+set firewall.tor.input='REJECT'
+set firewall.tor.output='ACCEPT'
+set firewall.tor.forward='REJECT'
+set firewall.tor.conntrack='1'
+set firewall.tor.network='tor'
+
+add firewall rule
+set firewall.@rule[-1].name='Allow-Tor-DHCP'
+set firewall.@rule[-1].src='tor'
+set firewall.@rule[-1].proto='udp'
+set firewall.@rule[-1].dest_port='67'
+set firewall.@rule[-1].target='ACCEPT'
+
+add firewall rule
+set firewall.@rule[-1].name='Allow-Tor-to-TorDNS'
+set firewall.@rule[-1].src='tor'
+set firewall.@rule[-1].proto='udp'
+set firewall.@rule[-1].dest_port='9053'
+set firewall.@rule[-1].target='ACCEPT'
+
+add firewall rule
+set firewall.@rule[-1].name='Allow-Tor-Transproxy'
+set firewall.@rule[-1].src='tor'
+set firewall.@rule[-1].proto='tcp'
+set firewall.@rule[-1].dest_port='9040'
+set firewall.@rule[-1].target='ACCEPT'
+
+add firewall rule
+set firewall.@rule[-1].name='Allow-Tor-SSH'
+set firewall.@rule[-1].src='tor'
+set firewall.@rule[-1].proto='tcp'
+set firewall.@rule[-1].dest_port='22'
+set firewall.@rule[-1].target='ACCEPT'
+
+add firewall rule
+set firewall.@rule[-1].name='Allow-Tor-HTTP'
+set firewall.@rule[-1].src='tor'
+set firewall.@rule[-1].proto='tcp'
+set firewall.@rule[-1].dest_port='80'
+set firewall.@rule[-1].target='ACCEPT'
+
+EOF
+
+uci commit network
+uci commit dhcp
+uci commit firewall
+/etc/init.d/network restart
+/etc/init.d/dnsmasq reload

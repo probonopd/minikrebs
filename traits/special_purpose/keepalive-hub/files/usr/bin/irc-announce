@@ -1,0 +1,55 @@
+#!/bin/sh
+# based on http://gum.krebsco.de/stockholm/tree/krebs/5pkgs/git-hooks/default.nix#n111
+
+# requires `sed -u` - which is part of the sed package in openwrt
+# requires nc
+# requires awk
+
+set -euf
+LOGNAME=${LOGNAME:-irc_announce}
+HOSTNAME=$(uci get system.@system[0].hostname)
+IRC_SERVER=$(uci get announce.irc.server)
+IRC_PORT=$(uci get announce.irc.port)
+IRC_NICK=${HOSTNAME}-$$
+IRC_CHANNEL=$(uci get announce.irc.channel)
+message="$@"
+
+export IRC_CHANNEL # for privmsg_cat
+
+echo2() { echo "$*"; echo "$*" >&2; }
+cat2() { tee /dev/stderr; }
+
+privmsg_cat() { awk '{ print "PRIVMSG "ENVIRON["IRC_CHANNEL"]" :"$0 }'; }
+
+tmpdir="$(mktemp -d irc-announce_XXXXXXXX)"
+cd "$tmpdir"
+mkfifo ircin
+trap "
+  rm ircin
+  cd '$OLDPWD'
+  rmdir '$tmpdir'
+  trap - EXIT INT QUIT
+" EXIT INT QUIT
+
+{
+  echo2 "USER $LOGNAME 0 * :$LOGNAME@${HOSTNAME}"
+  echo2 "NICK $IRC_NICK"
+
+  # wait for MODE message
+  sed -un '/^:[^ ]* MODE /q'
+
+  echo2 "JOIN $IRC_CHANNEL"
+
+  printf '%s' "$message" \
+    | privmsg_cat \
+    | cat2
+
+  echo2 "PART $IRC_CHANNEL"
+
+  # wait for PART confirmation
+  sed -un '/:'"$IRC_NICK"'![^ ]* PART /q'
+
+  echo2 'QUIT :Gone to have lunch'
+} < ircin \
+  | nc "$IRC_SERVER" "$IRC_PORT" |tee -a ircin
+

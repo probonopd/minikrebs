@@ -1,5 +1,0 @@
-This build will set up the following:
-
-eth0 - lan, dnsmasq 192.168.211.1
-wlan0 - wan,dhcp
-

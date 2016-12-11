@@ -1,2 +1,7 @@
 # install overlay packages
-installs all packages provided in the overlay folder /packages
+Installs all packages provided in the overlay folder /packages
+
+Packages can be installed by other traits with an `OVERLAY_PACKAGES` entry in
+their manifest file (e.g. `network/aircrack-overlay/MANIFEST` ).
+
+See the top-level README on how to prepare an overlay.

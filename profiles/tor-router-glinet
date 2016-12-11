@@ -1,0 +1,20 @@
+# Tor Router profile
+# two eth network interfaces will be configured (eth0,eth1) and one wifi
+# interface (wlan0)
+# all tcp traffic will be routed through tor (from eth1,wlan0 to eth0)
+#
+# a build for glinet : PLATFORM='GLINET' IMAGEBUILDER_URL='https://downloads.openwrt.org/chaos_calmer/15.05/ar71xx/generic/OpenWrt-ImageBuilder-15.05-ar71xx-generic.Linux-x86_64.tar.bz2' ./prepare tor-router-glinet
+core
+core/firstrun
+minimal/no-ppp
+# eth0:dhcp-client
+network/eth-dhcp
+# eth1: dhcp-server, named 'tor-br'
+# configure firewall tor tor itf
+network/tor/secondary-eth-static-tor
+# configure nat-ing for br-tor, enable tor daemon
+network/tor/wifi-connecTOR-open
+network/tor/torrouter
+
+gui/luci
+gui/luci/uhttpd

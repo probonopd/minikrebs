@@ -1,0 +1,21 @@
+#!/bin/sh /etc/rc.common
+# uhub launcher
+
+START=50
+STOP=10
+USE_PROCD=1
+UHUB=/usr/bin/uhub 
+
+start_service() {
+  procd_open_instance
+  procd_set_param command $UHUB -l /var/log/uhub.log -vvv
+  procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-5} ${respawn_retry:-5}
+  procd_set_param file /etc/uhub/uhub.conf
+  procd_set_param stdout 1
+  procd_close_instance
+
+}
+
+stop() {
+	killall $UHUB
+}

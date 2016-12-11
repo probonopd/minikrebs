@@ -1,0 +1,16 @@
+Welcome to hub.nsupdate.info
+  xx  xx                  xx  xx
+xxxx  xx    xxxx  xxxx  xxxx  xx
+xxxx  xx    xxxx  xxxx  xxxx  xx
+  xxxxxx      xx    xx    xxxxxx
+  xxxxxx    xxxxxxxxxx    xxxxxx
+    xx    xxxxxxxxxxxxxx    xx  
+    xxxxxxxxxxxxxxxxxxxxxxxxxx  
+          xxxxxxxxxxxxxx        
+      xxxxxxxxxxxxxxxxxxxxxx    
+      xx      xxxxxx      xx    
+    xx    xx  xx  xx  xx    xx  
+    xx    xx  xx  xx  xx    xx  
+    xx  xxxx  xx  xx  xxxx  xx  
+
+This is elchOS Hub BACKUP

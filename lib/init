@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -x
 
 cd $(dirname $(readlink -f $0))
 if [ ! -e Makefile ] ;then 
@@ -7,7 +8,7 @@ if [ ! -e Makefile ] ;then
     exit 1
 fi
 
-echo 
+echo
 rm -r bin/ || echo "no bindir, skipping removal"
 if [ -e ./custom_make ];then
     echo "Starting Custom Make"
@@ -24,19 +25,28 @@ echo
 FACTORY=$(find bin/ | grep -e "squashfs-factory.bin$" | head -n 1)
 SYSUPGRADE=$(find bin/ | grep -e "squashfs-sysupgrade.bin$" | head -n 1)
 
+if [ "$FACTORY" == "" ]; then
+  # x86-64
+  FACTORY=$(find bin/ | grep -e "combined-squashfs.img$" | head -n 1)
+fi
+
 if [ "$FACTORY" != "" ];
 then
     cat << EOF
-finished building 
+finished building
 You can use the following images:
-    Factory       : $PWD/$FACTORY
-    System Upgrade: $PWD/$SYSUPGRADE
+    Factory       : $FACTORY
+    System Upgrade: ${SYSUPGRADE:-No sysupgrade produced}
 EOF
+  exit 0
 else
     cat << EOF
 It seems like the factory image has not been created, it could mean
 that the image would be too big and does not fit into the tiny FLASH.
 
 Observe the output above, fix, and retry building.
+In bin/ :
+  $(find bin/)
 EOF
+  exit 1
 fi

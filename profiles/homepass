@@ -1,0 +1,24 @@
+# Nintendo Zone profile for TLWR703
+#
+# to make it a bit more secure we will use everything in our might to protect
+# the open wifi:
+#   * run all traffic through tor
+#   * protect ssh and http ports via firewall
+core
+core/firstrun
+minimal/no-ppp
+# eth0:dhcp-client
+network/eth-dhcp
+# configure wifi access point
+network/tor/wifi-homepass
+
+# configure br-tor
+network/tor/wifi-static-br-tor
+# configure nat-ing for br-tor, enable tor daemon
+network/tor/torrouter
+
+# enable remote management
+network/firewall/wan-open
+# enable luci for easier management
+gui/luci
+gui/luci/uhttpd

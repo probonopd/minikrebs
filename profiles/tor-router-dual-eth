@@ -1,0 +1,26 @@
+# Dual-Ethernet Tor Router profile
+#
+# two network interfaces will be configured (eth0,eth1)
+# all tcp traffic will be routed through tor
+# DNS traffic will also be handled by tor
+# all other udp/icmp traffic is dropped
+#
+# Build a qemu vm: 
+#   PLATFORM='' IMAGEBUILDER_URL='https://downloads.openwrt.org/chaos_calmer/15.05/x86/64/OpenWrt-ImageBuilder-15.05-x86-64.Linux-x86_64.tar.bz2' ./prepare
+#
+# Convert to Virtualbox image:
+#   VboxManage convertfromraw *-combined-squashfs.img openwrt-torrouter.vdi --format VDI
+#
+# Convert to qemu QCOW2:
+#   qemu-img convert openwrt-15.05-x86-64-combined-ext4.img -O qcow2 openwrt-ext4.qcow2
+#
+core
+core/firstrun
+minimal/no-ppp
+# eth0:dhcp-client
+network/eth-dhcp
+# eth1: dhcp-server, named 'tor-br'
+# configure firewall tor tor itf
+network/tor/secondary-eth-static-tor
+# configure nat-ing for br-tor, enable tor daemon
+network/tor/torrouter

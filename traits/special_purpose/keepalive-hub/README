@@ -1,0 +1,7 @@
+# Keepalived DC++ Hub for elchos
+
+TODO: configure the priority on the SLAVE to 100 instead of 150 in /etc/keepalived/keepalived.conf
+TODO: do a clean configure of the firewall and network config files
+TODO: configure the keepalived password to something more random
+TODO: get the packages from somewhere else (a channel maybe?)
+      origin: https://github.com/makefu/openwrt-custom-builder/releases

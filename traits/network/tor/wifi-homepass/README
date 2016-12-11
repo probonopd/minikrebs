@@ -1,0 +1,6 @@
+Prereq:
+  * uci `network.tor`
+  * uci `wireless.radio0`
+
+Configures wifi to create an open network named 'NZ@McD1' with homeZone mac
+address and attaches it network 'tor'

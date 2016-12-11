@@ -1,0 +1,8 @@
+Prerequirements:
+  * uci `network.tor.ipaddr`
+  * uci `network.tor.type=bridge` (br-tor interface)
+
+Starts up Tor daemon on the local network
+
+Uses the "br-tor" interface for routing and gets the ip address of the local
+network with `uci get network.tor.ipaddr`

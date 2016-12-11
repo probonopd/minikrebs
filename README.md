@@ -1,12 +1,36 @@
-# Customized OpenWrt image generator [![Build Status](https://travis-ci.org/probonopd/minikrebs.svg?branch=master)](https://travis-ci.org/probonopd/minikrebs)
+# Customized OpenWrt image generator [![Build Status](https://travis-ci.org/krebscode/minikrebs.svg?branch=master)](https://travis-ci.org/krebscode/minikrebs)
 
-This is a customized OpenWrt firmware image generator based on http://shackspace.de/wiki/doku.php?id=project:minikrebs 
+This is a customized OpenWrt firmware image generator based on http://shackspace.de/wiki/doku.php?id=project:minikrebs
 
-You can download some of the generated firmware images from this [Bintray repository](https://bintray.com/probono/OpenWrt).
+You can download some of the generated firmware images from this [Bintray repository](https://bintray.com/krebscode/minikrebs).
 
 __CAUTION:__ These images are entirely __untested__ and you are running them on __your own risk__. You might brick your device, so if you do not know how to debrick your device e.g., using a serial console, don't use these images.
 
+
 ## Profiles
+
+### Tor Router
+
+Creates a router which transparently forwards tcp traffic from one interface to
+another.
+
+* **tor-router-dual-eth**: route between two network interfaces
+
+```
+IMAGEBUILDER_URL='https://downloads.openwrt.org/chaos_calmer/15.05/x86/64/OpenWrt-ImageBuilder-15.05-x86-64.Linux-x86_64.tar.bz2'
+PLATFORM=''
+./prepare tor-router-dual-eth
+builder/init
+```
+
+* **tor-router-glinet**: route between from wifi to ethernet for glinet routers
+
+```
+PLATFORM='GLINET'
+IMAGEBUILDER_URL='https://downloads.openwrt.org/chaos_calmer/15.05/ar71xx/generic/OpenWrt-ImageBuilder-15.05-ar71xx-generic.Linux-x86_64.tar.bz2'
+./prepare tor-router-glinet
+builder/init
+```
 
 ### Radio
 
@@ -100,3 +124,42 @@ config interface 'lan0'
         option ifname 'eth0.1'
         option proto 'dhcp'
 ```
+
+# Overlay
+## How it works
+Overlaying the rootfs with an usb stick provides your mini computer with a lot
+of free disk space. Minikrebs provides means to prepare an overlay and
+automatically install packages on first boot with the following traits:
+
+  * *usb/root_overlay/*
+  * *usb/root_overlay/install_overlay_packages/*
+
+Include these traits in your profile and an overlay filesystem will be used on
+bootup. The source code is very short so be sure to read it :)
+
+Other traits then can use `OVERLAY_PACKAGES` in their manifest to
+install packages which normally would be too big.
+
+
+## Overlay Init
+For initialization the following steps must be performed:
+
+```
+cfdisk /dev/sdx # create a single partition
+mkfs.vfat /dev/sdx1 # prepare a file system which is supported for the overlay
+./prepare profile-with-overlay
+# builder/overlay_packages will be filled by the traits by utilizing 
+mkdir -p builder/mnt/overlay
+mount /dev/sdx1 builder/mnt/overlay
+./builder/init_overlay # copies packages from overlay_packages, also copies
+                       # files from ./builder/overlay to ./builder/mnt/overlay
+# builder/mnt/overlay will be unmounted after successful init
+./builder/init
+```
+
+## Caveats for Overlaying
+Please be aware that the overlay initialization is pretty much entirely
+untested - **it worked 3 years ago for me, nothing more, nothing less**.
+
+My focus shifted a bit from 4mb flash routers to routers with enough disk 
+space (16m).

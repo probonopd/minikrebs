@@ -1,0 +1,23 @@
+# Tor Router profile for TLWR703
+#
+# you will need to have a 16mb modded version and edit the following files in
+# builder/
+#   sed -i 's#Device/tplink-4mlzma#Device/tplink-16mlzma#' target/linux/ar71xx/image/Makefile
+#
+#
+# eth0 is the INTERNET itf
+# wlan0 is the transparent tor interface
+#
+# a build for wr703: PLATFORM='TLWR703' IMAGEBUILDER_URL='https://downloads.openwrt.org/chaos_calmer/15.05/ar71xx/generic/OpenWrt-ImageBuilder-15.05-ar71xx-generic.Linux-x86_64.tar.bz2' ./prepare tor-router
+core
+core/firstrun
+minimal/no-ppp
+# eth0:dhcp-client
+network/eth-dhcp
+# configure wifi access point
+network/tor/wifi-connecTOR-open
+# configure br-tor
+network/tor/wifi-static-br-tor
+
+# configure nat-ing for br-tor, enable tor daemon
+network/tor/torrouter
