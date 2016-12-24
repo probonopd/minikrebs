@@ -20,7 +20,7 @@ PROFILE=$1
 if [ ! -e builder/init ]; then
     wget --trust-server-names -c "$IMAGEBUILDER_URL" 
     tar xf $(basename "$IMAGEBUILDER_URL")
-    mv OpenWrt-*-x86_64 builder
+    mv *-x86_64 builder
     echo "Builder successfully downloaded"
 else
     echo "Builder already installed, skipping download"
